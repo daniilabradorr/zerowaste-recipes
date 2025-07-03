@@ -1,0 +1,32 @@
+# Entorno virtual
+.venv/
+# Archivos Python compilados
+__pycache__/
+*.py[cod]
+# Configuración del editor
+.vscode/
+.idea/
+# Bases de datos locales
+*.sqlite3
+# Credenciales y variables privadas
+.env
+# Ficheros de logs
+*.log
+# Archivos generados por tests/coverage
+.coverage
+htmlcov/
+# Builds y distribuciones
+dist/
+build/
+# Archivos de OS
+.DS_Store
+Thumbs.db
+# Archivos estáticos y media generados
+staticfiles/
+media/
+# Docker
+*.pid
+# Node (si llegases a usar)
+node_modules/
+# Fly.io
+fly.toml.local
