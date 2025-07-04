@@ -1,6 +1,6 @@
 from __future__ import annotations #Para  mejorar los type hints sin afectar al codigo en ejecucion
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.utils.translation import get_language
 from .models import Recipe, Ingredient, RecipeIngredient
@@ -76,3 +76,47 @@ class SuggestView(View):
             return HttpResponseServerError(
                 "<p class='text-red-500'>😔 Ocurrió un error inesperado.</p>"
             )
+        
+
+class TranslateView(View):
+    def post(self, request, pk):
+        recipe = get_object_or_404(Recipe, pk=pk)
+        target = "en" if recipe.language == "es" else "es"
+
+        # Llamada IA: traducir título y pasos
+        prompt = (
+            f"Traduce este título y pasos al "
+            f'{"inglés" if target=="en" else "español"}\n\n'
+            f'Título: "{recipe.title}"\n'
+            f"Pasos:\n{recipe.instructions}"
+        )
+        try:
+            data = suggest_recipe(prompt, target)
+        except Exception as e:
+            logger.error("Error translating recipe: %s", e)
+            return render(
+                request,
+                "recipes/_recipe_card.html",
+                {"recipe": recipe, "error": "No se pudo traducir. Intenta de nuevo."},
+                status=500,
+            )
+
+        # Creamos una NUEVA Recipe traducida
+        translated = Recipe.objects.create(
+            title=data.get("title", recipe.title),
+            instructions="\n".join(data.get("steps", recipe.instructions.splitlines())),
+            language=target,
+            is_ai=True,
+            created_by=request.user if request.user.is_authenticated else None,
+        )
+
+        # Copiamos los ingredientes de la original
+        for ri in recipe.ingredients.all():
+            RecipeIngredient.objects.create(
+                recipe=translated,
+                ingredient=ri.ingredient,
+                quantity=ri.quantity,
+            )
+
+        # Renderizamos la tarjeta traducida
+        return render(request, "recipes/_recipe_card.html", {"recipe": translated})

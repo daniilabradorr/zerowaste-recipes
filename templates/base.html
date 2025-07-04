@@ -9,7 +9,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CDN -->
+
+   <!-- PWA: manifest + registro del Service Worker -->
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register("{% static 'sw.js' %}");
+    }
+  </script>
+
+
+  <!-- Tailwind CDN (válido para el MVP) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -27,17 +37,40 @@
       },
     };
   </script>
-  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 <body class="font-sans bg-gray-50 text-gray-800">
   <!-- Header -->
-  <header class="bg-white shadow-md px-4 py-2 flex items-center gap-2">
-    <img src="{% static 'img/logo32.png' %}" width="32" height="32" alt="Logo">
-    <h1 class="font-serif text-xl">ZeroWaste Recipes</h1>
-    {% if user.is_authenticated %}
-      <a href="{% url 'logout' %}" class="ml-auto text-sm text-gray-600 hover:underline">Salir</a>
-    {% endif %}
+  <header class="bg-white shadow-md px-4 py-2 flex items-center gap-4">
+    <img src="{% static 'img/logo32.png' %}" alt="Logo" width="32" height="32">
+    <h1 class="font-serif text-xl">
+      <a href="{% url 'recipes:home' %}">ZeroWaste Recipes</a>
+    </h1>
+
+    <!-- Navegación -->
+    <nav class="ml-auto flex items-center gap-4 text-sm text-gray-700">
+      <a href="{% url 'recipes:ingredients' %}" class="hover:underline">Mis ingredientes</a>
+
+      <!-- Selector de idioma -->
+      <form method="post" action="{% url 'set_language' %}" class="flex items-center">
+        {% csrf_token %}
+        <select name="language"
+                onchange="this.form.submit()"
+                class="border rounded p-1 text-sm">
+          <option value="es" {% if LANGUAGE_CODE == 'es' %}selected{% endif %}>ES</option>
+          <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>EN</option>
+        </select>
+        <input type="hidden" name="next" value="{{ request.path }}">
+      </form>
+
+      {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}" class="hover:underline">Salir</a>
+      {% else %}
+        <a href="{% url 'login' %}"  class="hover:underline">Entrar</a>
+      {% endif %}
+    </nav>
   </header>
 
   <!-- Contenido -->
@@ -49,8 +82,5 @@
   <footer class="bg-gray-100 py-4 text-center text-sm text-gray-500">
     © 2025 ZeroWaste Recipes
   </footer>
-
-  <!-- HTMX -->
-  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </body>
 </html>

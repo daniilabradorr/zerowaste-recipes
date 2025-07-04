@@ -43,6 +43,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 
+
     "django.middleware.locale.LocaleMiddleware",
 
     "django_htmx.middleware.HtmxMiddleware",
@@ -61,6 +62,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',#Para la traduccion de idiomas
             ],
         },
     },
@@ -99,8 +101,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
+# ------------------- NUEVO: idiomas y traducciones -------------------
+LANGUAGES = [
+    ('es', 'Español'),
+    ('en', 'English'),
+]
 
-LANGUAGE_CODE = 'en-us'
+# carpeta donde se generarán los .po/.mo
+LOCALE_PATHS = [BASE_DIR / "locale"]
+
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
