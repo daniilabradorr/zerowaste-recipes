@@ -9,7 +9,7 @@ __pycache__/
 # Bases de datos locales
 *.sqlite3
 # Credenciales y variables privadas
-.env
+.env*
 # Ficheros de logs
 *.log
 # Archivos generados por tests/coverage
