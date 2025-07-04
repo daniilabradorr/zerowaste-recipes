@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}ZeroWaste Recipes – Convierte sobras en cenas deliciosas{% endblock %}
+
+{% block content %}
+<!-- Hero section -->
+<section class="bg-gray-100 rounded-xl p-8 shadow text-center">
+  <h2 class="text-3xl font-serif text-primary mb-4">
+    Convierte sobras en cenas deliciosas
+  </h2>
+  <p class="text-lg text-gray-700 max-w-xl mx-auto mb-6">
+    ZeroWaste Recipes usa IA para sugerirte recetas creativas a partir de lo que ya tienes en la nevera.
+    Reduce el desperdicio alimentario y ahorra tiempo en la cocina.
+  </p>
+
+  <a href="{% url 'recipes:ingredients' %}"
+     class="inline-block bg-primary hover:bg-green-700 text-white px-6 py-3 rounded-lg transition">
+     ➜ Probar ahora
+  </a>
+</section>
+
+<!-- Features -->
+<section class="grid md:grid-cols-3 gap-6 mt-10">
+  <div class="p-6 border rounded-lg shadow-sm bg-white">
+    <h3 class="font-semibold text-secondary mb-2">Recetas generadas por IA</h3>
+    <p class="text-sm text-gray-600">Groq Llama-3 crea platos únicos optimizados para tus ingredientes.</p>
+  </div>
+  <div class="p-6 border rounded-lg shadow-sm bg-white">
+    <h3 class="font-semibold text-secondary mb-2">Bilingüe ES / EN</h3>
+    <p class="text-sm text-gray-600">Traducción automática con un clic para que compartas con todo el mundo.</p>
+  </div>
+  <div class="p-6 border rounded-lg shadow-sm bg-white">
+    <h3 class="font-semibold text-secondary mb-2">PWA sin conexión</h3>
+    <p class="text-sm text-gray-600">Guarda la app en tu móvil y consulta recetas aun sin internet.</p>
+  </div>
+</section>
+{% endblock %}

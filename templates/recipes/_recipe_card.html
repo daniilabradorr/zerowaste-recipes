@@ -1,0 +1,17 @@
+<article class="border rounded p-4 shadow mb-4">
+  <h3 class="text-lg font-serif text-primary mb-2">{{ recipe.title }}</h3>
+
+  <h4 class="font-semibold mb-1">Ingredientes</h4>
+  <ul class="list-disc ml-5">
+    {% for ri in recipe.ingredients.all %}
+      <li>{{ ri.ingredient.name }}{% if ri.quantity %}: {{ ri.quantity }}{% endif %}</li>
+    {% endfor %}
+  </ul>
+
+  <h4 class="font-semibold mt-2 mb-1">Pasos</h4>
+  <ol class="list-decimal ml-5">
+    {% for step in recipe.instructions.splitlines %}
+      <li>{{ step }}</li>
+    {% endfor %}
+  </ol>
+</article>
