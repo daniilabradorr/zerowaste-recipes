@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}
+  {% trans "Mis Insignias" %}
+{% endblock %}
+
+{% block content %}
+<section class="container mx-auto p-6">
+  <h1 class="text-2xl font-serif text-primary mb-4">{% trans "Insignias" %}</h1>
+
+  <!-- Insignias ganadas -->
+  <div class="mb-8">
+    <h2 class="text-xl font-semibold mb-2">{% trans "Tus Insignias" %}</h2>
+    {% if owned_badges %}
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {% for badge in owned_badges %}
+          <div class="bg-green-100 p-4 rounded-lg shadow-lg flex flex-col items-center">
+            <img src="{{ badge.icon.url }}" alt="{{ badge.name }}" class="w-16 h-16 mb-2">
+            <p class="font-medium">{{ badge.name }}</p>
+            <p class="text-sm text-gray-600">{% blocktrans %}Umbral: {{ badge.threshold }}{% endblocktrans %}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-600">{% trans "Aún no has ganado ninguna insignia." %}</p>
+    {% endif %}
+  </div>
+
+  <!-- Insignias disponibles -->
+  <div class="mb-8">
+    <h2 class="text-xl font-semibold mb-2">{% trans "Disponibles para ti" %}</h2>
+    {% if available_badges %}
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {% for badge in available_badges %}
+          <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition flex flex-col items-center">
+            <img src="{{ badge.icon.url }}" alt="{{ badge.name }}" class="w-16 h-16 mb-2 opacity-75">
+            <p class="font-medium">{{ badge.name }}</p>
+            <p class="text-sm text-gray-500">{% blocktrans %}Umbral: {{ badge.threshold }}{% endblocktrans %}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-600">{% trans "No hay insignias nuevas disponibles." %}</p>
+    {% endif %}
+  </div>
+
+  <!-- Próximamente -->
+  <div>
+    <h2 class="text-xl font-semibold mb-2">{% trans "Próximamente" %}</h2>
+    {% if coming_soon %}
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {% for badge in coming_soon %}
+          <div class="bg-gray-200 p-4 rounded-lg flex flex-col items-center">
+            <img src="{{ badge.icon.url }}" alt="{{ badge.name }}" class="w-16 h-16 mb-2 opacity-50">
+            <p class="font-medium text-gray-500">{{ badge.name }}</p>
+            <p class="text-sm text-gray-400">{% trans "Próximamente" %}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-600">{% trans "No hay insignias próximamente." %}</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

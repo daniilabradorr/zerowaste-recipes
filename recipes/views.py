@@ -1,69 +1,69 @@
-from __future__ import annotations  # Para mejorar los type hints sin afectar al código en ejecución
-
+from __future__ import annotations
 import logging
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
+from django.views.generic import TemplateView
 from django.utils.translation import get_language, gettext_lazy as _
 from django.http import HttpResponse, HttpResponseServerError
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Recipe, Ingredient, RecipeIngredient, Badge
-from .utils import suggest_recipe
+from django.contrib.auth.decorators import login_required
 
-logger = logging.getLogger(__name__)  # para dejar trazas en el log de Render
+
+from urllib.parse import quote
+
+from .models import Recipe, Ingredient, RecipeIngredient, Badge, BadgeAssignment, ShareEvent
+from .utils   import suggest_recipe
+
+logger = logging.getLogger(__name__)
 
 def home(request) -> HttpResponse:
-    """Mi landing page, accesible sin autenticación."""
-    #Todas las insignias definidas
-    all_badges = Badge.objects.all().order_by('threshold')
-    # Insignias que ya ha ganado el usuario
+    """
+    Landing page: muestro todas las insignias y las que el usuario ya tiene.
+    """
+    all_badges  = Badge.objects.all().order_by("threshold")
     user_badges = request.user.badges.all() if request.user.is_authenticated else []
     return render(request, "home.html", {
-        "all_badges": all_badges,
+        "all_badges":  all_badges,
         "user_badges": user_badges,
     })
 
-
-
 class IngredientFormView(LoginRequiredMixin, View):
-    """
-    Muestro el textarea para que el usuario escriba sus sobras.
-    Solo accesible para usuarios autenticados.
-    """
-    login_url = "login"
+    login_url           = "login"
     redirect_field_name = "next"
-    template_name = "recipes/ingredient_form.html"
-
+    template_name       = "recipes/ingredient_form.html"
     def get(self, request) -> HttpResponse:
         return render(request, self.template_name)
 
-
 class SuggestView(LoginRequiredMixin, View):
     """
-    Recibo la lista de ingredientes por POST, llamo a Groq para generar la receta,
-    la guardo y devuelvo la tarjeta parcial para HTMX.
+    POST = recibo la lista de ingredientes, llamo a la IA para generar la receta,
+    guardo la receta + sus ingredientes, y devuelvo el fragmento HTML para HTMX,
+    incluyendo 'nuevas_badges' si el usuario acaba de ganar alguna.
     """
-    login_url = "login"
+    login_url           = "login"
     redirect_field_name = "next"
 
     def post(self, request) -> HttpResponse:
-        raw_ingredients = request.POST.get("ingredients", "").strip()
-        if not raw_ingredients:
+        # 1️⃣ Leo y valido el input
+        raw = request.POST.get("ingredients", "").strip()
+        if not raw:
             return HttpResponse(
                 "<p class='text-red-500'>⚠️ Debes introducir al menos un ingrediente.</p>",
-                status=400,
+                status=400
             )
 
+        # 2️⃣ Determino idioma y llamo al helper de IA
         lang = get_language()[:2] or "es"
         try:
-            data = suggest_recipe(raw_ingredients, lang)
+            data = suggest_recipe(raw, lang)
         except Exception as err:
-            logger.error("Error al generar receta IA: %s", err)
+            logger.error("Error IA: %s", err)
             return HttpResponseServerError(
-                "<p class='text-red-500'>😔 Lo siento, la IA no pudo generar la receta. Intenta de nuevo.</p>"
+                "<p class='text-red-500'>😔 La IA falló. Intenta de nuevo.</p>"
             )
 
-        # Creo y guardo la receta generada
+        # 3️⃣ Creo y guardo la receta
         recipe = Recipe.objects.create(
             title=data.get("title"),
             instructions="\n".join(data["steps"]),
@@ -71,7 +71,8 @@ class SuggestView(LoginRequiredMixin, View):
             is_ai=True,
             created_by=request.user,
         )
-        # Vinculo ingredientes
+
+        # 4️⃣ Vinculo cada ingrediente
         for name in data["ingredients"]:
             ing, _ = Ingredient.objects.get_or_create(name=name)
             RecipeIngredient.objects.create(
@@ -80,56 +81,86 @@ class SuggestView(LoginRequiredMixin, View):
                 quantity="",
             )
 
-        return render(request, "recipes/_recipe_card.html", {"recipe": recipe})
+        # 5️⃣ Detecto si acabo de ganar alguna insignia
+        nuevas = BadgeAssignment.objects.filter(
+            user=request.user,
+            assigned_at__gte=recipe.created_at
+        )
 
+        # 6️⃣ Devuelvo la tarjeta + posibles nuevas_badges
+        return render(
+            request,
+            "recipes/_recipe_card.html",
+            {
+                "recipe": recipe,
+                "nuevas_badges": list(nuevas),  # envía lista (vacía o con items)
+            }
+        )
 
 class TranslateView(LoginRequiredMixin, View):
-    """
-    Traduzco una receta existente al otro idioma, creo una nueva Recipe
-    y copio sus ingredientes, luego devuelvo la tarjeta traducida.
-    """
-    login_url = "login"
+    login_url           = "login"
     redirect_field_name = "next"
-
     def post(self, request, pk) -> HttpResponse:
         recipe = get_object_or_404(Recipe, pk=pk)
-        target = "en" if recipe.language == "es" else "es"
-
+        target = "en" if recipe.language=="es" else "es"
         prompt = (
             f"Traduce este título y pasos al "
-            f'{"inglés" if target == "en" else "español"}\n\n'
-            f'Título: "{recipe.title}"\n'
-            f"Pasos:\n{recipe.instructions}"
+            f'{"inglés" if target=="en" else "español"}\n\n'
+            f'Título: "{recipe.title}"\nPasos:\n{recipe.instructions}'
         )
         try:
             data = suggest_recipe(prompt, target)
         except Exception as err:
-            logger.error("Error translating recipe: %s", err)
-            return render(
-                request,
-                "recipes/_recipe_card.html",
-                {"recipe": recipe, "error": _("No se pudo traducir. Intenta de nuevo.")},
-                status=500,
-            )
-
-        # Creo la receta traducida y copio los ingredientes
+            logger.error("Error traducción: %s", err)
+            return render(request, "recipes/_recipe_card.html",
+                          {"recipe": recipe, "error": _("No se pudo traducir.")},
+                          status=500)
         translated = Recipe.objects.create(
             title=data.get("title", recipe.title),
             instructions="\n".join(data.get("steps", recipe.instructions.splitlines())),
-            language=target,
-            is_ai=True,
-            created_by=request.user,
+            language=target, is_ai=True, created_by=request.user
         )
         for ri in recipe.ingredients.all():
-            RecipeIngredient.objects.create(
-                recipe=translated,
-                ingredient=ri.ingredient,
-                quantity=ri.quantity,
-            )
+            RecipeIngredient.objects.create(recipe=translated, ingredient=ri.ingredient, quantity=ri.quantity)
+        return render(request, "recipes/_recipe_card.html", {"recipe": translated})
 
-        return render(
-            request,
-            "recipes/_recipe_card.html",
-            {"recipe": translated},
-        )
-    
+class BadgeListView(LoginRequiredMixin, TemplateView):
+    template_name       = "recipes/badges.html"
+    login_url           = "login"
+    redirect_field_name = "next"
+
+    def get_context_data(self, **kwargs):
+        ctx        = super().get_context_data(**kwargs)
+        user       = self.request.user
+        all_badges = Badge.objects.all()
+        owned_ids  = user.badges.values_list("badge_id", flat=True)
+        ctx["owned_badges"]     = all_badges.filter(id__in=owned_ids)
+        ctx["available_badges"] = all_badges.filter(active=True).exclude(id__in=owned_ids)
+        ctx["coming_soon"]      = all_badges.filter(active=False)
+        return ctx
+
+@login_required
+def share_app(request):
+    """
+    Registra un ShareEvent, asigna badge 'Partner' cuando llegan a threshold,
+    y redirige al share URL (WhatsApp).
+    """
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    via = request.GET.get("via", "")
+    ShareEvent.objects.create(user=request.user, platform=via)
+
+    # ¿Partner?
+    total_shares = ShareEvent.objects.filter(user=request.user).count()
+    try:
+        partner = Badge.objects.get(name__iexact="partner", active=True)
+    except Badge.DoesNotExist:
+        partner = None
+
+    if partner and total_shares >= partner.threshold:
+        BadgeAssignment.objects.get_or_create(user=request.user, badge=partner)
+
+    # redirijo a WhatsApp con mensaje
+    msg = quote(f"¡Mira ZeroWaste Recipes! {request.build_absolute_uri('/')}")
+    return redirect(f"https://api.whatsapp.com/send?text={msg}")

@@ -1,143 +1,201 @@
 # ZeroWaste Recipes
 
-**Convierte sobras en comidas deliciosas** con nuestra aplicación web PWA multilingüe, impulsada por IA, PARA REDUCIR EL DESPERDICIO ALIMENTICIO.
+![Logo](static/img/logo32.png)
+
+**Convierte sobras en comidas y cenas deliciosas** / **Turn leftovers into delicious dinners**
+
+ZeroWaste Recipes es una aplicación web full-stack (Django + HTMX + PWA) que utiliza IA para generar recetas creativas a partir de los ingredientes que ya tienes en tu nevera, calcula la huella de CO₂ evitada y premia tu compromiso con insignias gamificadas.
 
 ---
 
-## 📖 Índice
+## 📖 Contenido
 
-1. [Visión general](#visión-general)  
-2. [Funcionalidades](#funcionalidades)  
-3. [Demo rápida](#demo-rápida)  
-4. [Tecnologías & Stack](#tecnologías--stack)  
-5. [Instalación local](#instalación-local)  
-6. [Desarrollo & Estructura](#desarrollo--estructura)  
-7. [Deploy automático en Render](#deploy-automático-en-render)  
-8. [Cómo usar](#cómo-usar)  
-9. [Internacionalización](#internacionalización)  
-10. [PWA y Offline](#pwa-y-offline)  
-11. [Pruebas manuales clave](#pruebas-manuales-clave)  
-12. [Próximos pasos (Día 3)](#próximos-pasos-día-3)  
-13. [Licencia](#licencia)  
-
----
-
-## Visión general
-
-ZeroWaste Recipes es un **recetario inteligente** que aprovecha tus sobras y las convierte en platos creativos gracias a Groq Llama-3. Disponible en **español** e **inglés**, y como **Progressive Web App** para consultar offline.
+1. [Demo & Despliegue](#demo--despliegue)  
+2. [Características Principales](#caracter%C3%ADsticas-principales)  
+3. [Tecnologías](#tecnolog%C3%ADas)  
+4. [Instalación & Desarrollo Local](#instalaci%C3%B3n--desarrollo-local)  
+5. [Variables de Entorno](#variables-de-entorno)  
+6. [Estructura de Carpetas](#estructura-de-carpetas)  
+7. [Uso](#uso)  
+8. [Insignias & Gamificación](#insignias--gamificaci%C3%B3n)  
+9. [PWA & Offline](#pwa--offline)  
+10. [Escalado & Producción](#escalado--producci%C3%B3n)  
+11. [Roadmap & Mejoras Futuras](#roadmap--mejoras-futuras)  
+12. [Licencia](#licencia)  
 
 ---
 
-## Funcionalidades
+## 🚀 Demo & Despliegue
 
-- **Autenticación**: registro, inicio de sesión y cierre de sesión con Django  
-- **CRUD de modelos**:
-  - **Ingredient**  
-  - **Recipe** (marcadas si son IA)  
-  - **RecipeIngredient**  
-  - **Leftover** (sobras del usuario)  
-- **“Mis ingredientes”**: formulario HTMX sin recarga  
-- **Generación IA**: sugerencia de receta vía Groq Llama-3 (modelo llama3-8b-instruct)  
-- **Traducción de receta**: botón “Traducir” HTMX que crea la versión en el otro idioma  
-- **Selector de idioma**: ES / EN en el header, ajusta cookie `django_language` + recarga  
-- **PWA mínima**: 
-  - `manifest.json` con iconos (192×192,512×512)  
-  - `sw.js` cacheando recursos estáticos  
-  - Instalación del Service Worker  
-- **CI/CD**: deploy automático en Render con migrations automáticas  
+- **URL producción (Render):** `https://zerowaste-recipes.onrender.com`
+- Dominio propio:  
+  > 🌐 Ya tienes tu dominio configurado apuntando a Render.  
 
 ---
 
-## Demo rápida
+## ✨ Características Principales
 
-1. **Regístrate** o ingresa como invitado.  
-2. Ve a **Mis ingredientes**, escribe “zanahoria, arroz” → pulsa **Sugerir receta**.  
-3. La tarjeta IA aparece sin recargar.  
-4. Pulsa **Traducir a inglés** → la tarjeta se actualiza en inglés.  
-5. Cambia idioma en el header → toda la UI pasa a ES / EN.  
-6. Instala la PWA en tu móvil y consulta offline.
+- **Recetas generadas por IA**  
+  Groq Llama-3 crea platos únicos usando solo tus ingredientes sobrantes.
+
+- **Bilingüe ES / EN**  
+  Selector de idioma global + traducción instantánea de cada receta.
+
+- **PWA sin conexión**  
+  Instala la app en tu móvil y consulta recetas aun sin internet.
+
+- **Cálculo de huella de CO₂**  
+  Suma las emisiones evitadas al aprovechar sobras:  
+  ```txt
+  3.45 kg CO₂eq
+````
+
+* mensaje “Al aprovechar estas sobras, evitas emitir …”.
+
+- **Gamificación & Badges**
+
+  * 🚀 **Starter**: 1ª receta IA
+  * 🔗 **Ambassador**: compartir la app 5 veces
+  * 🌱 **CO₂ Helper**: 25 recetas IA
+
+  > Se asignan automáticamente y se notifican con un modal.
 
 ---
 
-## Tecnologías & Stack
+## 🛠 Tecnologías
 
-- **Backend**: Django 5, django-htmx  
-- **IA**: Groq Cloud REST (modelo llama3-8b-instruct)  
-- **Base de datos**: PostgreSQL (Render)  
-- **Frontend**: HTMX, Tailwind CSS (CDN), Bulma/Tailwind vía SCSS  
-- **PWA**: manifest.json + Service Worker  
-- **Testing**: pytest, pytest-django  
-- **CI/CD**: GitHub Actions (opcional) + Render deploy automático  
+* **Backend**: Python 3.11 + Django 5.0
+* **Frontend**: HTMX, Tailwind CSS (CDN MVP)
+* **IA**: Groq API (Llama-3)
+* **Base de datos**: PostgreSQL (Render)
+* **Despliegue**: Render.com (autoscaling gratuito / startup plan)
+* **PWA**: Service Worker + manifest.json
 
 ---
 
-## Instalación local
+## 📥 Instalación & Desarrollo Local
 
-1. Clona el repositorio:
+```bash
+git clone https://github.com/tu-usuario/zerowaste-recipes.git
+cd zerowaste-recipes
+python -m venv .venv
+source .venv/bin/activate      # Linux / macOS
+.venv\Scripts\activate         # Windows PowerShell
+
+pip install -r requirements.txt
+```
+
+1. **Crear `.env` en raíz**
+
    ```
-   git clone https://github.com/tu-usuario/zerowaste-recipes.git
-   cd zerowaste-recipes
+   GROQ_API_KEY=tu_api_key_groq
+   DJANGO_SECRET_KEY=tu_secret_key
+   DATABASE_URL=postgresql://user:pass@host:port/dbname
+   ```
 
-2. Crea y activa un entorno virtual:
-    ```
-    python3.12 -m venv .venv
-    source .venv/bin/activate   # Unix/macOS
-    .\.venv\Scripts\activate    # Windows PowerShell
+2. **Migraciones y datos iniciales**
 
+   ```bash
+   python manage.py migrate
+   python manage.py loaddata badges_initial.json   # Insignias base
+   ```
 
-3. Instala dependencias:
-    ```
-    pip install -r requirements.txt
-    
-4. Configura variables de entorno en .env:
-    ```
-    DJANGO_SECRET_KEY=tu_secret_key
-    DATABASE_URL=postgres://usuario:pass@localhost:5432/zerowaste
-    GROQ_API_KEY=tu_api_key_groq
+3. **Correr en local**
 
-5. Aplica migraciones:
-    ```
-    python manage.py migrate
+   ```bash
+   python manage.py runserver
+   ```
 
-6. Ejecuta el servidor:
-    ```
-    python manage.py runserver
+---
 
+## 🔧 Variables de Entorno
 
+| Variable            | Descripción                   |
+| ------------------- | ----------------------------- |
+| `GROQ_API_KEY`      | Clave API para Groq Llama-3   |
+| `DJANGO_SECRET_KEY` | Clave secreta de Django       |
+| `DATABASE_URL`      | Cadena de conexión PostgreSQL |
 
-## desarrollo--estructura
+---
+
+## 📁 Estructura de Carpetas
+
+```
 zerowaste-recipes/
-├─ recipes/
-│  ├─ migrations/
-│  ├─ templates/recipes/
-│  │  ├─ ingredient_form.html
-│  │  └─ _recipe_card.html
-│  ├─ models.py
-│  ├─ views.py
-│  └─ urls.py
-├─ static/
-│  ├─ img/
-│  │  ├─ logo32.png
-│  │  ├─ icon-192.png
-│  │  └─ icon-512.png
-│  ├─ sw.js
-│  └─ manifest.json
-├─ templates/
-│  ├─ base.html
-│  └─ home.html
-├─ zerowaste/
-│  ├─ settings.py
-│  └─ urls.py
-├─ .env
-├─ manage.py
-└─ README.md
+├── recipes/
+│   ├── models.py
+│   ├── views.py
+│   ├── templates/recipes/
+│   └── static/
+├── templates/
+│   ├── base.html
+│   ├── home.html
+│   └── registration/
+├── manifest.json
+├── service-worker.js
+├── render.yaml
+├── requirements.txt
+└── README.md
+```
 
+---
 
+## ▶️ Uso
 
-## Licencia
+1. **Landing / Home**
 
-Este proyecto se distribuye bajo la **Licencia MIT**.  
-Puedes consultar el texto completo a continuación:
+   * Ver insignias, beneficios y “Probar ahora”.
+2. **Mis ingredientes**
+
+   * Añade sobras en textarea y pulsa “Sugerir receta”.
+3. **Tarjeta de receta**
+
+   * Título, ingredientes, pasos, huella CO₂ y botón “Traducir”.
+4. **Insignias**
+
+   * `/badges/` muestra tus insignias ganadas, disponibles y “Próximamente”.
+
+---
+
+## 🏅 Insignias & Gamificación
+
+* **Starter** (1 receta IA)
+* **Ambassador** (5 comparticiones distintas)
+* **CO₂ Helper** (25 recetas IA)
+
+Al cumplirse, se dispara un **modal**:
+
+> 🎉 **¡Has desbloqueado una insignia!**
+> ➜ Ver mis insignias
+
+---
+
+## 📱 PWA & Offline
+
+* **`manifest.json`**: iconos 192×192, 512×512
+* **`service-worker.js`**: precache de rutas críticas
+* Offline: navegar “Mis ingredientes” y sugerir recetas sin conexión.
+
+---
+
+## ⚙️ Escalado & Producción
+
+* **Render**: `render.yaml` define web service, build commands, health checks.
+* **Autoscaling**: ajustes según CPU > 70% o concurrencia.
+* **Logs & Alertas**: integración con Sentry (recomendado).
+
+---
+
+## 🛣️ Roadmap & Mejoras Futuras
+
+* **Día 4**: Cache + push notifications + spinner animado de hojas.
+* **Día 5**: UI/UX, accesibilidad, formularios feedback “inline”.
+* **Día 6**: CI/CD, tests automatizados, SEO, analytics.
+* **Día 7**: Documentación completa, marketing y soft-launch.
+
+---
+
+## 📜 Licencia
 
 MIT License
 
@@ -145,18 +203,12 @@ Copyright (c) 2025 ZeroWaste Recipes
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the “Software”), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+in the Software without restriction…  
+```
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+
+---
+
+¡Gracias por llegar hasta aquí! 🎉
+Próximamente llevaremos ZeroWaste Recipes a otro nivel con mejoras offline, tests, escalado y más gamificación.

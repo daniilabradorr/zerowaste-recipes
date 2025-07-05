@@ -1,5 +1,3 @@
-# recipes/models.py
-
 from __future__ import annotations
 import logging
 import re
@@ -9,10 +7,8 @@ import difflib
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-
-
-from django.contrib.auth import get_user_model
-from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -84,6 +80,7 @@ SPANISH_TO_EN: dict[str, str] = {
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=120, unique=True)
+
     def __str__(self) -> str:
         return self.name
 
@@ -112,19 +109,16 @@ class Recipe(models.Model):
            devuelvo el primero que casé en CO2_EMISSIONS o SPANISH_TO_EN.
         4. Si nada, intento fuzzy match.
         """
-        # 1 + 2: limpio y normalizo
         txt = re.sub(r"[^A-Za-zÀ-ÿ ]+", " ", raw)
         txt = unicodedata.normalize("NFKD", txt).encode("ascii", "ignore").decode().lower()
         tokens = txt.split()
 
-        # 3: busco en orden inverso
         for token in reversed(tokens):
             if token in CO2_EMISSIONS:
                 return token
             if token in SPANISH_TO_EN:
                 return SPANISH_TO_EN[token]
 
-        # 4: fuzzy match sobre toda la frase
         match = difflib.get_close_matches(" ".join(tokens), list(CO2_EMISSIONS), n=1, cutoff=0.8)
         return match[0] if match else ""
 
@@ -162,27 +156,49 @@ class Leftover(models.Model):
     added_at   = models.DateTimeField(auto_now_add=True)
 
 
+# —————————————————————————————————————————
+# Nuevo: registro de cada “compartición”
+class ShareEvent(models.Model):
+    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name="share_events")
+    platform   = models.CharField(max_length=20, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-#Ahora declaro los modelos de insignias y asignaciones
+    def __str__(self) -> str:
+        return f"{self.user} shared via {self.platform} @ {self.created_at}"
+
+
+# —————————————————————————————————————————
+# Insignias y asignaciones
 class Badge(models.Model):
-    """
-    Mi modelo de insignia: nombre, icono (emoji/SVG), umbral de recetas IA.
-    Yo lo uso para premiar al usuario.
-    """
-    name      = models.CharField(max_length=50, unique=True)       # ej. "Starter", "Eco-Hero"
-    icon      = models.CharField(max_length=10, help_text=_("Emoji o código SVG"))
-    threshold = models.PositiveIntegerField(help_text=_("Recetas IA necesarias"))
+    name       = models.CharField(max_length=50, unique=True, help_text=_("Ej. Starter, Eco-Hero, Partner"))
+    icon       = models.ImageField(upload_to="badges/", help_text=_("SVG o PNG"))
+    threshold  = models.PositiveIntegerField(default=0, help_text=_("Umbral de recetas o shares"))
+    active     = models.BooleanField(default=True, help_text=_("Disponible o Próximamente"))
+    discount   = models.PositiveSmallIntegerField(default=0, help_text=_("Descuento (%)"))
 
-    def __str__(self):
-        return f"{self.icon} {self.name}"
+    class Meta:
+        ordering = ["threshold", "name"]
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.threshold})"
+
 
 class BadgeAssignment(models.Model):
-    """
-    Asocio una Badge a un User cuando cumple el umbral.
-    """
-    user      = models.ForeignKey(User, on_delete=models.CASCADE, related_name="badges")
-    badge     = models.ForeignKey(Badge, on_delete=models.CASCADE)
+    user        = models.ForeignKey(User, on_delete=models.CASCADE, related_name="badges")
+    badge       = models.ForeignKey(Badge, on_delete=models.CASCADE)
     assigned_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("user","badge")
+        unique_together = ("user", "badge")
+        ordering        = ["-assigned_at"]
+
+
+# Señal para asignar automáticamente Starter/Eco-Hero (por recetas IA)
+@receiver(post_save, sender=Recipe)
+def assign_recipes_badges(sender, instance, created, **kwargs):
+    if not created or not instance.is_ai or not instance.created_by:
+        return
+    user  = instance.created_by
+    total = sender.objects.filter(created_by=user, is_ai=True).count()
+    for b in Badge.objects.filter(active=True, threshold__gt=0, threshold__lte=total):
+        BadgeAssignment.objects.get_or_create(user=user, badge=b)

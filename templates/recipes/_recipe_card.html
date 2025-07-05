@@ -50,4 +50,18 @@
       {% endif %}
     </button>
   </form>
+
+
+  {% if nuevas_badges %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function(){
+        const badges = {{ nuevas_badges|json_script:"newBadges" }};
+        const data = JSON.parse(document.getElementById("newBadges").textContent);
+        // Construyo modal:
+        let names = data.map(b => b.badge.name).join(", ");
+        showModal(`¡Enhorabuena! Has conseguido la(s) insignia(s): ${names}`,
+                  "Ver mis insignias", "{% url 'recipes:badges' %}#badges");
+      });
+    </script>
+  {% endif %}
 </article>
