@@ -170,6 +170,11 @@ class ShareEvent(models.Model):
 # —————————————————————————————————————————
 # Insignias y asignaciones
 class Badge(models.Model):
+
+    METRIC_CHOICES = [
+        ("recipes", _("Recetas IA")),
+        ("shares",   _("Compartidos")),
+    ]
     """
     Yo creo una insignia con:
     - name:       nombre único
@@ -197,6 +202,12 @@ class Badge(models.Model):
         default=0,
         help_text=_("Número de acciones necesarias para desbloquear")
     )
+    metric      = models.CharField(
+        max_length=10,
+        choices=METRIC_CHOICES,
+        default="recipes",
+        help_text=_("Tipo de métrica para esta insignia")
+    )
     active      = models.BooleanField(
         default=True,
         help_text=_("Si ya está disponible o aparece como Próximamente")
@@ -216,13 +227,3 @@ class BadgeAssignment(models.Model):
         unique_together = ("user", "badge")
         ordering        = ["-assigned_at"]
 
-
-# Señal para asignar automáticamente Starter/Eco-Hero (por recetas IA)
-@receiver(post_save, sender=Recipe)
-def assign_recipes_badges(sender, instance, created, **kwargs):
-    if not created or not instance.is_ai or not instance.created_by:
-        return
-    user  = instance.created_by
-    total = sender.objects.filter(created_by=user, is_ai=True).count()
-    for b in Badge.objects.filter(active=True, threshold__gt=0, threshold__lte=total):
-        BadgeAssignment.objects.get_or_create(user=user, badge=b)

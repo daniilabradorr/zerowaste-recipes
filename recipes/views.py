@@ -130,15 +130,49 @@ class BadgeListView(LoginRequiredMixin, TemplateView):
     redirect_field_name = "next"
 
     def get_context_data(self, **kwargs):
-        ctx        = super().get_context_data(**kwargs)
-        user       = self.request.user
-        all_badges = Badge.objects.all()
-        owned_ids  = user.badges.values_list("badge_id", flat=True)
-        ctx["owned_badges"]     = all_badges.filter(id__in=owned_ids)
-        ctx["available_badges"] = all_badges.filter(active=True).exclude(id__in=owned_ids)
-        ctx["coming_soon"]      = all_badges.filter(active=False)
-        return ctx
+        ctx          = super().get_context_data(**kwargs)
+        user         = self.request.user
+        all_badges   = Badge.objects.order_by("threshold")
 
+        recipes_count = Recipe.objects.filter(created_by=user, is_ai=True).count()
+        shares_count  = ShareEvent.objects.filter(user=user).count()
+
+        owned_badges     = []
+        available_badges = []
+        coming_soon      = []
+
+        for badge in all_badges:
+            # Si ya la tiene asignada
+            if BadgeAssignment.objects.filter(user=user, badge=badge).exists():
+                badge.progress = badge.threshold  # completada
+                owned_badges.append(badge)
+                continue
+
+            # Determinar métrica y unidad
+            name = badge.name.strip().lower()
+            if name == "partner":
+                progress = shares_count
+                unit = _("compartidos")
+            else:
+                progress = recipes_count
+                unit = _("recetas IA")
+
+            badge.unit_label = unit
+            badge.progress   = progress
+
+            if progress >= badge.threshold:
+                available_badges.append(badge)
+            else:
+                coming_soon.append(badge)
+
+        ctx.update({
+            "owned_badges":     owned_badges,
+            "available_badges": available_badges,
+            "coming_soon":      coming_soon,
+        })
+        return ctx
+    
+    
 @login_required
 def share_app(request):
     """

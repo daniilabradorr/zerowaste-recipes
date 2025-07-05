@@ -30,10 +30,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
 
+    "recipes.apps.RecipesConfig", # para la app de recetas
+
+
     'widget_tweaks',  # Para modificar widgets de formularios
 
     "django_htmx",
-    "recipes",
+    
 ]
 
 MIDDLEWARE = [
