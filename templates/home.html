@@ -46,7 +46,13 @@
       <div class="flex justify-center flex-wrap gap-4 mb-6">
         {% for assignment in user_badges %}
           <div class="flex flex-col items-center bg-green-100 px-5 py-4 rounded-2xl shadow-lg hover:scale-105 transform transition">
-            <span class="text-4xl mb-1">{{ assignment.badge.icon }}</span>
+            <div class="w-16 h-16 mb-2">
+              <img 
+                src="{{ assignment.badge.icon.url }}" 
+                alt="{{ assignment.badge.name }}" 
+                class="w-full h-full object-contain"
+              >
+            </div>
             <span class="font-medium">{{ assignment.badge.name }}</span>
           </div>
         {% endfor %}

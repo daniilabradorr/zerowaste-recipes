@@ -114,6 +114,19 @@
     </svg>
   </div>
 
+  {# BLOQUE DE MENSAJES #}
+  {% if messages %}
+    <div class="fixed top-4 right-4 space-y-2 z-50">
+      {% for message in messages %}
+        <div
+          class="px-4 py-2 rounded shadow-md {{ message.tags }} bg-green-100 text-green-800"
+        >
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
   <!-- Main Content -->
   <main class="mx-auto w-full max-w-screen-xl px-4 py-6">
     {% block content %}{% endblock %}
