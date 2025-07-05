@@ -46,9 +46,9 @@ ZeroWaste Recipes es una aplicación web full-stack (Django + HTMX + PWA) que ut
 
 - **Cálculo de huella de CO₂**  
   Suma las emisiones evitadas al aprovechar sobras:  
-  ```txt
+  txt
   3.45 kg CO₂eq
-````
+`
 
 * mensaje “Al aprovechar estas sobras, evitas emitir …”.
 
@@ -75,7 +75,7 @@ ZeroWaste Recipes es una aplicación web full-stack (Django + HTMX + PWA) que ut
 
 ## 📥 Instalación & Desarrollo Local
 
-```bash
+
 git clone https://github.com/tu-usuario/zerowaste-recipes.git
 cd zerowaste-recipes
 python -m venv .venv
@@ -83,28 +83,28 @@ source .venv/bin/activate      # Linux / macOS
 .venv\Scripts\activate         # Windows PowerShell
 
 pip install -r requirements.txt
-```
+
 
 1. **Crear `.env` en raíz**
 
-   ```
+   
    GROQ_API_KEY=tu_api_key_groq
    DJANGO_SECRET_KEY=tu_secret_key
    DATABASE_URL=postgresql://user:pass@host:port/dbname
-   ```
+   
 
 2. **Migraciones y datos iniciales**
 
-   ```bash
+   
    python manage.py migrate
    python manage.py loaddata badges_initial.json   # Insignias base
-   ```
+   
 
 3. **Correr en local**
 
-   ```bash
+   
    python manage.py runserver
-   ```
+   
 
 ---
 
@@ -120,7 +120,7 @@ pip install -r requirements.txt
 
 ## 📁 Estructura de Carpetas
 
-```
+
 zerowaste-recipes/
 ├── recipes/
 │   ├── models.py
@@ -136,7 +136,7 @@ zerowaste-recipes/
 ├── render.yaml
 ├── requirements.txt
 └── README.md
-```
+
 
 ---
 
@@ -204,7 +204,7 @@ Copyright (c) 2025 ZeroWaste Recipes
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the “Software”), to deal
 in the Software without restriction…  
-```
+
 
 
 
