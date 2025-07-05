@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 from django.urls import path, include
-from .views import RegisterView, CustomLoginView
+from .views import RegisterView, CustomLoginView, CookiePolicyView
 
 urlpatterns = [
     # — Admin de Django —
@@ -19,4 +19,6 @@ urlpatterns = [
 
     # — Resto de la app —
     path("", include("recipes.urls")),
+    path('cookies/', CookiePolicyView.as_view(),
+         name='cookie_policy'),
 ]

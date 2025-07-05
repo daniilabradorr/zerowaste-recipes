@@ -188,10 +188,9 @@ Al cumplirse, se dispara un **modal**:
 
 ## 🛣️ Roadmap & Mejoras Futuras
 
-* **Día 4**: Cache + push notifications + spinner animado de hojas.
-* **Día 5**: UI/UX, accesibilidad, formularios feedback “inline”.
-* **Día 6**: CI/CD, tests automatizados, SEO, analytics.
-* **Día 7**: Documentación completa, marketing y soft-launch.
+* **5**: UI/UX, accesibilidad, formularios feedback “inline”.
+* **6**: CI/CD, tests automatizados, SEO, analytics.
+* **7**: Documentación completa, marketing y soft-launch.
 
 ---
 

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}
+  {% if LANGUAGE_CODE == 'es' %}Política de cookies{% else %}Cookie Policy{% endif %}
+{% endblock %}
+{% block content %}
+<section class="container mx-auto p-6 bg-white rounded shadow">
+  <h1 class="text-3xl font-serif text-primary mb-4">
+    {% if LANGUAGE_CODE == 'es' %}Política de cookies{% else %}Cookie Policy{% endif %}
+  </h1>
+
+  <p class="mb-4">
+    {% if LANGUAGE_CODE == 'es' %}
+      En ZeroWaste Recipes utilizamos las siguientes cookies:
+    {% else %}
+      At ZeroWaste Recipes we use the following cookies:
+    {% endif %}
+  </p>
+
+  <ul class="list-disc ml-6 space-y-2 mb-6">
+    <li>
+      <strong>sessionid</strong><br>
+      {% if LANGUAGE_CODE == 'es' %}
+        Identifica tu sesión de usuario para mantenerte autenticado.
+      {% else %}
+        Identifies your user session so you stay logged in.
+      {% endif %}
+    </li>
+    <li>
+      <strong>csrftoken</strong><br>
+      {% if LANGUAGE_CODE == 'es' %}
+        Previene ataques CSRF en los formularios.
+      {% else %}
+        Protects against CSRF attacks in forms.
+      {% endif %}
+    </li>
+    <li>
+      <strong>cookie_consent</strong><br>
+      {% if LANGUAGE_CODE == 'es' %}
+        Recuerda que has aceptado la política de cookies.
+      {% else %}
+        Remembers that you have accepted the cookie policy.
+      {% endif %}
+    </li>
+    <li>
+      <strong>django_language</strong><br>
+      {% if LANGUAGE_CODE == 'es' %}
+        Guarda tu idioma preferido (ES/EN).
+      {% else %}
+        Stores your preferred language (ES/EN).
+      {% endif %}
+    </li>
+  </ul>
+
+  <p class="text-sm text-gray-600">
+    {% if LANGUAGE_CODE == 'es' %}
+      Puedes gestionar tus preferencias de cookies borrando estas cookies desde la configuración de tu navegador.
+    {% else %}
+      You can manage your cookie preferences by deleting these cookies from your browser settings.
+    {% endif %}
+  </p>
+</section>
+{% endblock %}

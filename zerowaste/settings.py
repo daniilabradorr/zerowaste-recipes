@@ -46,6 +46,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     "django.middleware.locale.LocaleMiddleware",
 
@@ -132,6 +133,10 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 #Para producción en Fly usare collectstatic
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

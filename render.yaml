@@ -3,6 +3,21 @@ services:
     name: zerowaste-recipes
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
+
+    # Instalamos dependencias y preparamos los estáticos
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+
+    # Aplicamos migraciones antes de desplegar
     preDeployCommand: python manage.py migrate --noinput
-    startCommand: gunicorn zerowaste.wsgi --log-file -
+
+    # Arrancamos Gunicorn escuchando en el puerto que Render asigne
+    startCommand: gunicorn zerowaste.wsgi \
+                  --workers 3 \
+                  --bind 0.0.0.0:$PORT \
+                  --log-file -
+
+    # Opcional: si quieres un health check
+    healthCheckPath: "/"
+    healthCheckIntervalSeconds: 15

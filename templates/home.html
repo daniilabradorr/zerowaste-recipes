@@ -20,7 +20,7 @@
       Sube de nivel y desbloquea beneficios exclusivos.
     </p>
     <a href="{% url 'recipes:ingredients' %}"
-       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition">
+       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition mb-8">
        ➜ Probar ahora
     </a>
   {% else %}
@@ -32,62 +32,48 @@
       Level up to unlock exclusive perks.
     </p>
     <a href="{% url 'recipes:ingredients' %}"
-       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition">
+       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition mb-8">
        ➜ Try now
     </a>
   {% endif %}
 
-  <!-- Mis Insignias -->
-  <div id="badges" class="mt-12">
+  <!-- Mis Insignias (centrado eje X) -->
+  <div id="my-badges" class="mx-auto max-w-3xl">
     <h3 class="text-2xl font-serif text-primary mb-4">
       {% if LANGUAGE_CODE == 'es' %}Mis Insignias{% else %}My Badges{% endif %}
     </h3>
-    <div class="flex flex-wrap gap-3 mb-8">
-      {% if user_badges %}
+    {% if user_badges %}
+      <div class="flex justify-center flex-wrap gap-4 mb-6">
         {% for assignment in user_badges %}
-          <div class="flex items-center gap-2 bg-green-100 px-4 py-2 rounded-lg shadow">
-            <span class="text-xl">{{ assignment.badge.icon }}</span>
+          <div class="flex flex-col items-center bg-green-100 px-5 py-4 rounded-2xl shadow-lg hover:scale-105 transform transition">
+            <span class="text-4xl mb-1">{{ assignment.badge.icon }}</span>
             <span class="font-medium">{{ assignment.badge.name }}</span>
           </div>
         {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-600 mb-6">
+        {% if LANGUAGE_CODE == 'es' %}
+          Aún no tienes insignias. ¡Genera tu primera receta IA!
+        {% else %}
+          You don’t have any badges yet. Create your first AI recipe!
+        {% endif %}
+      </p>
+    {% endif %}
+
+    <!-- Botón para ver todas las insignias disponibles -->
+    <a href="{% url 'recipes:my_badges' %}"
+       class="inline-block bg-secondary hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-full transition">
+      {% if LANGUAGE_CODE == 'es' %}
+        Ver insignias disponibles
       {% else %}
-        <p class="text-gray-600">
-          {% if LANGUAGE_CODE == 'es' %}
-            Aún no tienes insignias. ¡Genera tu primera receta IA!
-          {% else %}
-            You don’t have any badges yet. Create your first AI recipe!
-          {% endif %}
-        </p>
+        View all badges
       {% endif %}
-    </div>
-
-    <h3 class="text-2xl font-serif text-primary mb-4">
-      {% if LANGUAGE_CODE == 'es' %}Insignias Disponibles{% else %}Available Badges{% endif %}
-    </h3>
-    <div class="grid md:grid-cols-3 gap-6">
-      {% for badge in all_badges %}
-        <div class="p-4 border rounded-lg shadow-sm bg-white flex items-center gap-3">
-          <span class="text-2xl">{{ badge.icon }}</span>
-          <div>
-            <p class="font-semibold">{{ badge.name }}</p>
-            <p class="text-sm text-gray-600">
-              {% if LANGUAGE_CODE == 'es' %}
-                Genera {{ badge.threshold }} receta{% if badge.threshold > 1 %}s{% endif %} IA
-              {% else %}
-                Generate {{ badge.threshold }} AI recipe{% if badge.threshold > 1 %}s{% endif %}
-              {% endif %}
-            </p>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
+    </a>
   </div>
-  <!-- /Mis Insignias -->
-
 </section>
 
 <!-- Features -->
-<!-- Features (estilo extra llamativo) -->
 <section class="grid md:grid-cols-3 gap-8 mt-12">
   {% if LANGUAGE_CODE == 'es' %}
     <!-- Recetas IA -->
@@ -112,7 +98,7 @@
         </h4>
       </div>
       <ul class="list-disc list-inside text-gray-600 space-y-1">
-        <li>Exclusividad en tienda: descuentos en utensilios eco.</li>
+        <li>Exclusividad en tienda: descuentos en productos eco.</li>
         <li>Newsletter gratuito: beneficios antes que nadie.</li>
         <li>Gamificación: sube de nivel y presume tus logros.</li>
       </ul>
@@ -154,7 +140,7 @@
       </div>
       <ul class="list-disc list-inside text-gray-600 space-y-1">
         <li>Store exclusives: discounts on eco-friendly gear.</li>
-        <li>Free newsletter: get perks before anyone else.</li>
+        <li>Free newsletter: perks before anyone else.</li>
         <li>Gamification: level up and show off your achievements.</li>
       </ul>
     </div>

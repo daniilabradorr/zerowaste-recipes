@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 from django.views.generic import CreateView
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, TemplateView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
 from django.contrib import messages
@@ -40,3 +40,9 @@ class CustomLoginView(LoginView):
     def form_invalid(self, form):
         messages.error(self.request, _("Usuario o contraseña incorrectos"))
         return super().form_invalid(form)
+    
+class CookiePolicyView(TemplateView):
+    """
+    Muestro la página estática con nuestra política de cookies.
+    """
+    template_name = "cookie_policy.html"

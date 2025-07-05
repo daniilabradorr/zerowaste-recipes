@@ -137,6 +137,47 @@
     © 2025 ZeroWaste Recipes
   </footer>
 
+  {# — Cookie consent banner — #}
+  <div id="cookie-banner"
+       class="fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4 flex flex-col md:flex-row items-center justify-between space-y-2 md:space-y-0 hidden">
+    <span class="text-sm">
+      {% if LANGUAGE_CODE == 'es' %}
+        🍪 Usamos cookies para mejorar tu experiencia y gestionar tu cuenta, idioma y gamificación.
+      {% else %}
+        🍪 We use cookies to enhance your experience and handle your account, language and badges.
+      {% endif %}
+    </span>
+    <div class="flex items-center gap-4">
+      <button id="cookie-accept"
+              class="bg-primary hover:bg-green-700 text-white font-semibold px-4 py-2 rounded">
+        {% if LANGUAGE_CODE == 'es' %}Aceptar{% else %}Accept{% endif %}
+      </button>
+      <a href="{% url 'cookie_policy' %}"
+         class="underline text-sm hover:text-primary">
+        {% if LANGUAGE_CODE == 'es' %}Más info{% else %}Learn more{% endif %}
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      function getCookie(name) {
+        return document.cookie.split('; ').reduce((r, v) => {
+          const parts = v.split('=');
+          return parts[0] === name ? decodeURIComponent(parts[1]) : r
+        }, '');
+      }
+      const banner = document.getElementById('cookie-banner');
+      if (!getCookie('cookie_consent')) {
+        banner.classList.remove('hidden');
+      }
+      document.getElementById('cookie-accept').addEventListener('click', () => {
+        document.cookie = "cookie_consent=1;path=/;max-age=" + 60*60*24*365;
+        banner.classList.add('hidden');
+      });
+    });
+  </script>
+
   <!-- Scripts -->
   <script>
     function showModal(message, btnText, btnHref){
