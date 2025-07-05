@@ -8,9 +8,12 @@
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap"
+    rel="stylesheet"
+  >
 
-  <!-- PWA: manifest + registro del Service Worker -->
+  <!-- PWA: manifest + Service Worker -->
   <link rel="manifest" href="{% static 'manifest.json' %}">
   <script>
     if ('serviceWorker' in navigator) {
@@ -18,7 +21,7 @@
     }
   </script>
 
-  <!-- Tailwind CDN (válido para el MVP) -->
+  <!-- Tailwind CDN (MVP) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -29,8 +32,8 @@
             secondary: "#fb923c",
           },
           fontFamily: {
-            sans: ["Inter", "sans-serif"],
-            serif: ["Playfair Display", "serif"],
+            sans: ["Inter","sans-serif"],
+            serif: ["Playfair Display","serif"],
           },
         },
       },
@@ -43,13 +46,12 @@
 <body class="font-sans bg-gray-50 text-gray-800">
 
   <!-- Header -->
-  <header class="bg-white shadow-md px-4 py-2 flex flex-wrap items-center gap-4">
+  <header class="bg-white shadow-md px-4 py-3 flex flex-wrap items-center gap-4">
     <img src="{% static 'img/logo32.png' %}" alt="Logo" width="32" height="32">
     <h1 class="font-serif text-xl">
       <a href="{% url 'recipes:home' %}">ZeroWaste Recipes</a>
     </h1>
 
-    <!-- Navegación -->
     <nav class="ml-auto flex flex-wrap items-center gap-4 text-sm text-gray-700">
       <a href="{% url 'recipes:home' %}" class="hover:underline">Inicio</a>
       <a href="{% url 'recipes:mission' %}" class="hover:underline">Misión</a>
@@ -66,9 +68,7 @@
       <!-- Selector de idioma -->
       <form method="post" action="{% url 'set_language' %}" class="flex items-center">
         {% csrf_token %}
-        <select name="language"
-                onchange="this.form.submit()"
-                class="border rounded p-1 text-sm">
+        <select name="language" onchange="this.form.submit()" class="border rounded p-1 text-sm">
           <option value="es" {% if LANGUAGE_CODE == 'es' %}selected{% endif %}>ES</option>
           <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>EN</option>
         </select>
@@ -94,30 +94,22 @@
     id="htmx-spinner"
     class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 hidden z-50"
   >
-    <svg
-      class="w-20 h-20 text-primary"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 64 64"
-    >
-      <g class="animate-spin" style="transform-origin: 32px 32px;">
+    <svg class="w-20 h-20 text-primary animate-spin" viewBox="0 0 64 64">
+      <g transform="translate(32,32)">
         <path d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
-              fill="currentColor"
-              transform="translate(32,4) scale(1.5)"/>
+              fill="currentColor" transform="translate(0,-28) scale(1.5)"/>
         <path d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
-              fill="currentColor"
-              transform="rotate(90 32 32) translate(32,4) scale(1.5)"/>
+              fill="currentColor" transform="rotate(90) translate(0,-28) scale(1.5)"/>
         <path d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
-              fill="currentColor"
-              transform="rotate(180 32 32) translate(32,4) scale(1.5)"/>
+              fill="currentColor" transform="rotate(180) translate(0,-28) scale(1.5)"/>
         <path d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
-              fill="currentColor"
-              transform="rotate(270 32 32) translate(32,4) scale(1.5)"/>
+              fill="currentColor" transform="rotate(270) translate(0,-28) scale(1.5)"/>
       </g>
     </svg>
   </div>
 
-  <!-- Contenido -->
-  <main class="mx-auto w-full max-w-screen-sm p-4">
+  <!-- Main Content -->
+  <main class="mx-auto w-full max-w-screen-xl px-4 py-6">
     {% block content %}{% endblock %}
   </main>
 
@@ -126,7 +118,7 @@
     © 2025 ZeroWaste Recipes
   </footer>
 
-  {# — Cookie consent banner — #}
+  <!-- Cookie Banner -->
   <div id="cookie-banner"
        class="fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4 flex flex-col md:flex-row items-center justify-between space-y-2 md:space-y-0 hidden">
     <span class="text-sm">
@@ -148,6 +140,7 @@
     </div>
   </div>
 
+  <!-- Cookie & Spinner Scripts -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       function getCookie(name) {
@@ -165,28 +158,7 @@
         banner.classList.add('hidden');
       });
     });
-  </script>
 
-  <script>
-    function showModal(message, btnText, btnHref){
-      const overlay = document.createElement("div");
-      overlay.className = "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center";
-      const box = document.createElement("div");
-      box.className = "bg-white p-6 rounded-lg shadow-lg max-w-sm text-center";
-      box.innerHTML = `
-        <p class="mb-4">${message}</p>
-        <a href="${btnHref}"
-           class="px-4 py-2 bg-primary text-white rounded">${btnText}</a>
-      `;
-      overlay.appendChild(box);
-      document.body.appendChild(overlay);
-      overlay.addEventListener("click", e => {
-        if (e.target === overlay) overlay.remove();
-      });
-    }
-  </script>
-
-  <script>
     document.body.addEventListener('htmx:configRequest', () => {
       document.getElementById('htmx-spinner').classList.remove('hidden');
     });
