@@ -51,6 +51,8 @@
 
     <!-- Navegación -->
     <nav class="ml-auto flex items-center gap-4 text-sm text-gray-700">
+      <a href="{% url 'recipes:home' %}" class="hover:underline">Inicio</a>
+      <a href="{% url 'recipes:home' %}#badges" class="hover:underline">Insignias</a>
       <a href="{% url 'recipes:ingredients' %}" class="hover:underline">Mis ingredientes</a>
 
       <!-- Selector de idioma -->
@@ -66,12 +68,57 @@
       </form>
 
       {% if user.is_authenticated %}
-        <a href="{% url 'logout' %}" class="hover:underline">Salir</a>
-      {% else %}
+        <form method="post" action="{% url 'logout' %}" class="ml-auto">
+          {% csrf_token %}
+          <button type="submit"
+                  class="text-sm text-gray-600 hover:underline bg-none p-0">
+            Salir
+          </button>
+        </form>
+      {% endif %}
+      {% if not user.is_authenticated %}
         <a href="{% url 'login' %}"  class="hover:underline">Entrar</a>
       {% endif %}
     </nav>
   </header>
+
+  <!-- Spinner global HTMX -->
+  <div
+    id="htmx-spinner"
+    class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 hidden z-50"
+  >
+    <svg
+      class="w-20 h-20 text-primary"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+    >
+      <!-- Grupo de hojas que gira alrededor del centro (32,32) -->
+      <g class="animate-spin" style="transform-origin: 32px 32px;">
+        <!-- Hoja ampliada y colocada en el tope -->
+        <path
+          d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
+          fill="currentColor"
+          transform="translate(32,4) scale(1.5)"
+        />
+        <!-- Clones rotados cada 90° -->
+        <path
+          d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
+          fill="currentColor"
+          transform="rotate(90 32 32) translate(32,4) scale(1.5)"
+        />
+        <path
+          d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
+          fill="currentColor"
+          transform="rotate(180 32 32) translate(32,4) scale(1.5)"
+        />
+        <path
+          d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
+          fill="currentColor"
+          transform="rotate(270 32 32) translate(32,4) scale(1.5)"
+        />
+      </g>
+    </svg>
+  </div>
 
   <!-- Contenido -->
   <main class="container mx-auto p-4">
@@ -82,5 +129,18 @@
   <footer class="bg-gray-100 py-4 text-center text-sm text-gray-500">
     © 2025 ZeroWaste Recipes
   </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.body.addEventListener('htmx:configRequest', (evt) => {
+      document.getElementById('htmx-spinner').classList.remove('hidden');
+    });
+    document.body.addEventListener('htmx:afterOnLoad', (evt) => {
+      document.getElementById('htmx-spinner').classList.add('hidden');
+    });
+    document.body.addEventListener('htmx:responseError', (evt) => {
+      document.getElementById('htmx-spinner').classList.add('hidden');
+    });
+  </script>
 </body>
 </html>

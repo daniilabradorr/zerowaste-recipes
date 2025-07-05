@@ -10,61 +10,166 @@
 
 {% block content %}
 <!-- Hero -->
-<section class="bg-gray-100 rounded-xl p-8 shadow text-center">
+<section class="bg-green-50 rounded-xl p-8 shadow-lg text-center">
   {% if LANGUAGE_CODE == 'es' %}
-    <h2 class="text-3xl font-serif text-primary mb-4">
+    <h2 class="text-4xl font-serif text-primary mb-4">
       Convierte sobras en cenas deliciosas
     </h2>
-    <p class="text-lg text-gray-700 max-w-xl mx-auto mb-6">
-      ZeroWaste Recipes usa IA para sugerirte recetas creativas a partir de lo que ya tienes en la nevera.
-      Reduce el desperdicio alimentario y ahorra tiempo en la cocina.
+    <p class="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
+      ZeroWaste Recipes usa IA para sugerirte recetas creativas y reducir CO₂. 
+      Sube de nivel y desbloquea beneficios exclusivos.
     </p>
     <a href="{% url 'recipes:ingredients' %}"
-       class="inline-block bg-primary hover:bg-green-700 text-white px-6 py-3 rounded-lg transition">
+       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition">
        ➜ Probar ahora
     </a>
   {% else %}
-    <h2 class="text-3xl font-serif text-primary mb-4">
+    <h2 class="text-4xl font-serif text-primary mb-4">
       Turn leftovers into delicious dinners
     </h2>
-    <p class="text-lg text-gray-700 max-w-xl mx-auto mb-6">
-      ZeroWaste Recipes uses AI to suggest creative recipes based on what you already have in your fridge.
-      Reduce food waste and save time in the kitchen.
+    <p class="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
+      ZeroWaste Recipes uses AI to suggest creative recipes and cut CO₂. 
+      Level up to unlock exclusive perks.
     </p>
     <a href="{% url 'recipes:ingredients' %}"
-       class="inline-block bg-primary hover:bg-green-700 text-white px-6 py-3 rounded-lg transition">
+       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition">
        ➜ Try now
     </a>
   {% endif %}
+
+  <!-- Mis Insignias -->
+  <div id="badges" class="mt-12">
+    <h3 class="text-2xl font-serif text-primary mb-4">
+      {% if LANGUAGE_CODE == 'es' %}Mis Insignias{% else %}My Badges{% endif %}
+    </h3>
+    <div class="flex flex-wrap gap-3 mb-8">
+      {% if user_badges %}
+        {% for assignment in user_badges %}
+          <div class="flex items-center gap-2 bg-green-100 px-4 py-2 rounded-lg shadow">
+            <span class="text-xl">{{ assignment.badge.icon }}</span>
+            <span class="font-medium">{{ assignment.badge.name }}</span>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-gray-600">
+          {% if LANGUAGE_CODE == 'es' %}
+            Aún no tienes insignias. ¡Genera tu primera receta IA!
+          {% else %}
+            You don’t have any badges yet. Create your first AI recipe!
+          {% endif %}
+        </p>
+      {% endif %}
+    </div>
+
+    <h3 class="text-2xl font-serif text-primary mb-4">
+      {% if LANGUAGE_CODE == 'es' %}Insignias Disponibles{% else %}Available Badges{% endif %}
+    </h3>
+    <div class="grid md:grid-cols-3 gap-6">
+      {% for badge in all_badges %}
+        <div class="p-4 border rounded-lg shadow-sm bg-white flex items-center gap-3">
+          <span class="text-2xl">{{ badge.icon }}</span>
+          <div>
+            <p class="font-semibold">{{ badge.name }}</p>
+            <p class="text-sm text-gray-600">
+              {% if LANGUAGE_CODE == 'es' %}
+                Genera {{ badge.threshold }} receta{% if badge.threshold > 1 %}s{% endif %} IA
+              {% else %}
+                Generate {{ badge.threshold }} AI recipe{% if badge.threshold > 1 %}s{% endif %}
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <!-- /Mis Insignias -->
+
 </section>
 
 <!-- Features -->
-<section class="grid md:grid-cols-3 gap-6 mt-10">
+<!-- Features (estilo extra llamativo) -->
+<section class="grid md:grid-cols-3 gap-8 mt-12">
   {% if LANGUAGE_CODE == 'es' %}
-    <div class="p-6 border rounded-lg shadow-sm bg-white">
-      <h3 class="font-semibold text-secondary mb-2">Recetas generadas por IA</h3>
-      <p class="text-sm text-gray-600">Groq Llama-3 crea platos únicos optimizados para tus ingredientes.</p>
+    <!-- Recetas IA -->
+    <div class="group p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+      <div class="flex items-center mb-4">
+        <span class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-full mr-4 text-2xl">🍳</span>
+        <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+          Recetas IA
+        </h4>
+      </div>
+      <p class="text-gray-600">
+        Groq Llama-3 crea platos únicos optimizados para tus ingredientes.
+      </p>
     </div>
-    <div class="p-6 border rounded-lg shadow-sm bg-white">
-      <h3 class="font-semibold text-secondary mb-2">Bilingüe ES / EN</h3>
-      <p class="text-sm text-gray-600">Traducción automática con un clic para que compartas con todo el mundo.</p>
+
+    <!-- Insignias & Ventajas -->
+    <div class="group p-6 bg-white rounded-2xl ring-2 ring-dashed ring-secondary/30 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+      <div class="flex items-center mb-4">
+        <span class="inline-flex items-center justify-center w-12 h-12 bg-secondary/20 text-secondary rounded-full mr-4 text-2xl">🏅</span>
+        <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-secondary transition-colors">
+          Insignias & Ventajas
+        </h4>
+      </div>
+      <ul class="list-disc list-inside text-gray-600 space-y-1">
+        <li>Exclusividad en tienda: descuentos en utensilios eco.</li>
+        <li>Newsletter gratuito: beneficios antes que nadie.</li>
+        <li>Gamificación: sube de nivel y presume tus logros.</li>
+      </ul>
     </div>
-    <div class="p-6 border rounded-lg shadow-sm bg-white">
-      <h3 class="font-semibold text-secondary mb-2">PWA sin conexión</h3>
-      <p class="text-sm text-gray-600">Guarda la app en tu móvil y consulta recetas aún sin internet.</p>
+
+    <!-- PWA sin conexión -->
+    <div class="group p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+      <div class="flex items-center mb-4">
+        <span class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-full mr-4 text-2xl">📱</span>
+        <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+          PWA sin conexión
+        </h4>
+      </div>
+      <p class="text-gray-600">
+        Guarda la app en tu móvil y consulta recetas incluso sin internet.
+      </p>
     </div>
   {% else %}
-    <div class="p-6 border rounded-lg shadow-sm bg-white">
-      <h3 class="font-semibold text-secondary mb-2">AI-Generated Recipes</h3>
-      <p class="text-sm text-gray-600">Groq Llama-3 crafts unique dishes optimized for your ingredients.</p>
+    <!-- AI-Generated Recipes -->
+    <div class="group p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+      <div class="flex items-center mb-4">
+        <span class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-full mr-4 text-2xl">🍳</span>
+        <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+          AI-Generated Recipes
+        </h4>
+      </div>
+      <p class="text-gray-600">
+        Groq Llama-3 crafts unique dishes optimized for your ingredients.
+      </p>
     </div>
-    <div class="p-6 border rounded-lg shadow-sm bg-white">
-      <h3 class="font-semibold text-secondary mb-2">Bilingual ES / EN</h3>
-      <p class="text-sm text-gray-600">One-click auto-translation so you can share with everyone.</p>
+
+    <!-- Badges & Perks -->
+    <div class="group p-6 bg-white rounded-2xl ring-2 ring-dashed ring-secondary/30 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+      <div class="flex items-center mb-4">
+        <span class="inline-flex items-center justify-center w-12 h-12 bg-secondary/20 text-secondary rounded-full mr-4 text-2xl">🏅</span>
+        <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-secondary transition-colors">
+          Badges & Perks
+        </h4>
+      </div>
+      <ul class="list-disc list-inside text-gray-600 space-y-1">
+        <li>Store exclusives: discounts on eco-friendly gear.</li>
+        <li>Free newsletter: get perks before anyone else.</li>
+        <li>Gamification: level up and show off your achievements.</li>
+      </ul>
     </div>
-    <div class="p-6 border rounded-lg shadow-sm bg-white">
-      <h3 class="font-semibold text-secondary mb-2">Offline PWA</h3>
-      <p class="text-sm text-gray-600">Install the app on your phone and view recipes even without internet.</p>
+
+    <!-- Offline PWA -->
+    <div class="group p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+      <div class="flex items-center mb-4">
+        <span class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-full mr-4 text-2xl">📱</span>
+        <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+          Offline PWA
+        </h4>
+      </div>
+      <p class="text-gray-600">
+        Install the app on your phone and view recipes even without internet.
+      </p>
     </div>
   {% endif %}
 </section>

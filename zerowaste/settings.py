@@ -29,6 +29,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
+    'widget_tweaks',  # Para modificar widgets de formularios
+
     "django_htmx",
     "recipes",
 ]
@@ -97,6 +100,10 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+LOGIN_REDIRECT_URL = "recipes:home"
+LOGOUT_REDIRECT_URL = "recipes:home"
 
 
 # Internationalization

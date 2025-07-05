@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  {% if LANGUAGE_CODE == 'es' %}
+    ZeroWaste Recipes – Convierte sobras en cenas deliciosas
+  {% else %}
+    ZeroWaste Recipes – Turn leftovers into delicious dinners
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-gray-100 rounded-xl p-8 shadow text-center">
+  {% if LANGUAGE_CODE == 'es' %}
+    <h2 class="text-3xl font-serif text-primary mb-4">
+      Convierte sobras en cenas deliciosas
+    </h2>
+    <p class="text-lg text-gray-700 max-w-xl mx-auto mb-6">
+      ZeroWaste Recipes usa IA para sugerirte recetas creativas a partir de lo que ya tienes en la nevera.
+      Reduce el desperdicio alimentario y ahorra tiempo en la cocina.
+    </p>
+    <a href="{% url 'recipes:ingredients' %}"
+       class="inline-block bg-primary hover:bg-green-700 text-white px-6 py-3 rounded-lg transition">
+       ➜ Probar ahora
+    </a>
+  {% else %}
+    <h2 class="text-3xl font-serif text-primary mb-4">
+      Turn leftovers into delicious dinners
+    </h2>
+    <p class="text-lg text-gray-700 max-w-xl mx-auto mb-6">
+      ZeroWaste Recipes uses AI to suggest creative recipes based on what you already have in your fridge.
+      Reduce food waste and save time in the kitchen.
+    </p>
+    <a href="{% url 'recipes:ingredients' %}"
+       class="inline-block bg-primary hover:bg-green-700 text-white px-6 py-3 rounded-lg transition">
+       ➜ Try now
+    </a>
+  {% endif %}
+
+  <!-- SECCIÓN DE INSIGNIAS AGREGADA -->
+  <section id="badges" class="mt-12">
+    <h2 class="text-2xl font-serif text-primary mb-4">Mis Insignias</h2>
+    <div class="flex flex-wrap gap-3 mb-8">
+      {% if user_badges %}
+        {% for assignment in user_badges %}
+          <div class="flex items-center gap-2 bg-green-100 px-4 py-2 rounded-lg shadow">
+            <span class="text-xl">{{ assignment.badge.icon }}</span>
+            <span class="font-medium">{{ assignment.badge.name }}</span>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-gray-600">Aún no has ganado ninguna insignia. ¡Comienza generando recetas!</p>
+      {% endif %}
+    </div>
+
+    <h2 class="text-2xl font-serif text-primary mb-4">Insignias Disponibles</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      {% for badge in all_badges %}
+        <div class="p-4 border rounded-lg shadow-sm bg-white flex items-center gap-3">
+          <span class="text-2xl">{{ badge.icon }}</span>
+          <div>
+            <p class="font-semibold">{{ badge.name }}</p>
+            <p class="text-sm text-gray-600">Genera {{ badge.threshold }} receta{% if badge.threshold > 1 %}s{% endif %} IA</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+  <!-- ============================= -->
+</section>
+
+<!-- Features -->
+<section class="grid md:grid-cols-3 gap-6 mt-10">
+  {% if LANGUAGE_CODE == 'es' %}
+    <div class="p-6 border rounded-lg shadow-sm bg-white">
+      <h3 class="font-semibold text-secondary mb-2">Recetas generadas por IA</h3>
+      <p class="text-sm text-gray-600">Groq Llama-3 crea platos únicos optimizados para tus ingredientes.</p>
+    </div>
+    <div class="p-6 border rounded-lg shadow-sm bg-white">
+      <h3 class="font-semibold text-secondary mb-2">Bilingüe ES / EN</h3>
+      <p class="text-sm text-gray-600">Traducción automática con un clic para que compartas con todo el mundo.</p>
+    </div>
+    <div class="p-6 border rounded-lg shadow-sm bg-white">
+      <h3 class="font-semibold text-secondary mb-2">PWA sin conexión</h3>
+      <p class="text-sm text-gray-600">Guarda la app en tu móvil y consulta recetas aún sin internet.</p>
+    </div>
+  {% else %}
+    <div class="p-6 border rounded-lg shadow-sm bg-white">
+      <h3 class="font-semibold text-secondary mb-2">AI-Generated Recipes</h3>
+      <p class="text-sm text-gray-600">Groq Llama-3 crafts unique dishes optimized for your ingredients.</p>
+    </div>
+    <div class="p-6 border rounded-lg shadow-sm bg-white">
+      <h3 class="font-semibold text-secondary mb-2">Bilingual ES / EN</h3>
+      <p class="text-sm text-gray-600">One-click auto-translation so you can share with everyone.</p>
+    </div>
+    <div class="p-6 border rounded-lg shadow-sm bg-white">
+      <h3 class="font-semibold text-secondary mb-2">Offline PWA</h3>
+      <p class="text-sm text-gray-600">Install the app on your phone and view recipes even without internet.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

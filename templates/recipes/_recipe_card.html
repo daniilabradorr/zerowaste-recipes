@@ -1,32 +1,53 @@
+{% load static i18n %}
+
 <article class="border rounded p-4 shadow mb-4">
   <h3 class="text-lg font-serif text-primary mb-2">{{ recipe.title }}</h3>
 
-  <h4 class="font-semibold mb-1">Ingredientes</h4>
+  <h4 class="font-semibold mb-1">{% trans "Ingredientes" %}</h4>
   <ul class="list-disc ml-5">
     {% for ri in recipe.ingredients.all %}
       <li>{{ ri.ingredient.name }}{% if ri.quantity %}: {{ ri.quantity }}{% endif %}</li>
     {% endfor %}
   </ul>
 
-  <h4 class="font-semibold mt-2 mb-1">Pasos</h4>
+  <h4 class="font-semibold mt-2 mb-1">{% trans "Pasos" %}</h4>
   <ol class="list-decimal ml-5">
     {% for step in recipe.instructions.splitlines %}
       <li>{{ step }}</li>
     {% endfor %}
   </ol>
 
-    <form hx-post="{% url 'recipes:translate' recipe.id %}"
-      hx-target="closest article"
-      hx-swap="outerHTML"
-      class="inline">
-        {% csrf_token %}
-        <button type="submit"
-                class="mt-3 text-sm text-secondary hover:underline">
-            {% if recipe.language == "es" %}
-            Traducir a inglés
-            {% else %}
-            Translate to Spanish
-            {% endif %}
-        </button>
-    </form>
+  <!-- Huella de CO₂ -->
+  <p class="mt-3 text-sm text-gray-600">
+    {{ recipe.footprint_display }}
+  </p>
+
+  <!-- Emisiones evitadas -->
+  <p class="mt-1 text-sm text-green-700">
+    {% if recipe.language == "es" %}
+      {% blocktrans with fp=recipe.footprint_display %}
+        Al aprovechar estas sobras, evitas emitir {{ fp }}.
+      {% endblocktrans %}
+    {% else %}
+      {% blocktrans with fp=recipe.footprint_display %}
+        By using these leftovers, you avoid emitting {{ fp }}.
+      {% endblocktrans %}
+    {% endif %}
+  </p>
+
+  <!-- Botón traducir -->
+  <form hx-post="{% url 'recipes:translate' recipe.id %}"
+        hx-target="closest article"
+        hx-swap="outerHTML"
+        class="inline">
+    {% csrf_token %}
+    <button type="submit"
+            class="mt-3 text-sm text-secondary hover:underline">
+      {% if recipe.language == "es" %}
+        {% trans "Traducir a inglés" %}
+      {% else %}
+        {% trans "Translate to Spanish" %}
+      {% endif %}
+    </button>
+  </form>
 </article>
