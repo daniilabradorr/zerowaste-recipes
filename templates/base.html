@@ -4,22 +4,46 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Favicon ICO -->
-  <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
 
-  <!-- Para Apple touch (opcional) -->
+  {# Meta description (puedes sobreescribir en plantillas hijas) #}
+  {% block meta_description %}
+    {% trans "ZeroWaste Recipes usa IA para convertir tus sobras en recetas deliciosas mientras reduces tu huella de CO₂. Descubre, comparte y sube de nivel con nuestras insignias gamificadas." as default_meta_desc %}
+    <meta name="description" content="{{ default_meta_desc }}">
+  {% endblock %}
+
+  <meta name="author"   content="ZeroWaste Recipes">
+  <meta name="keywords" content="zero waste, recetas, IA, cocinar, sobras, sostenibilidad, CO₂, gamificación, insignias">
+
+  {# Open Graph #}
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="ZeroWaste Recipes">
+  <meta property="og:title"       content="{% block og_title %}ZeroWaste Recipes{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ default_meta_desc }}{% endblock %}">
+  <meta property="og:url"         content="{{ request.build_absolute_uri }}">
+  <meta property="og:image"       content="{% static 'img/og-image.png' %}">
+
+  {# Twitter Card #}
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@ZeroWasteRecp">
+  <meta name="twitter:title"       content="{% block twitter_title %}ZeroWaste Recipes{% endblock %}">
+  <meta name="twitter:description" content="{% block twitter_description %}{{ default_meta_desc }}{% endblock %}">
+  <meta name="twitter:image"       content="{% static 'img/twitter-card.png' %}">
+
+  {# Favicon & Apple Touch #}
+  <link rel="icon"             href="{% static 'img/favicon.ico' %}" type="image/x-icon">
   <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
 
+  {# Título de la página (se puede sobrescribir) #}
   <title>{% block title %}ZeroWaste Recipes{% endblock %}</title>
 
-  <!-- Google Fonts -->
+  {# Google Fonts #}
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap"
     rel="stylesheet"
   >
 
-  <!-- PWA: manifest + Service Worker -->
+  {# PWA: manifest + Service Worker #}
   <link rel="manifest" href="{% static 'manifest.json' %}">
   <script>
     if ('serviceWorker' in navigator) {
@@ -27,7 +51,7 @@
     }
   </script>
 
-  <!-- Tailwind CDN (MVP) -->
+  {# Tailwind CDN (MVP) #}
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -46,7 +70,7 @@
     };
   </script>
 
-  <!-- HTMX -->
+  {# HTMX #}
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 <body class="font-sans bg-gray-50 text-gray-800">
@@ -84,8 +108,7 @@
       {% if user.is_authenticated %}
         <form method="post" action="{% url 'logout' %}" class="ml-auto">
           {% csrf_token %}
-          <button type="submit"
-                  class="text-sm text-gray-600 hover:underline bg-none p-0">
+          <button type="submit" class="text-sm text-gray-600 hover:underline bg-none p-0">
             Salir
           </button>
         </form>
@@ -118,9 +141,7 @@
   {% if messages %}
     <div class="fixed top-4 right-4 space-y-2 z-50">
       {% for message in messages %}
-        <div
-          class="px-4 py-2 rounded shadow-md {{ message.tags }} bg-green-100 text-green-800"
-        >
+        <div class="px-4 py-2 rounded shadow-md {{ message.tags }} bg-green-100 text-green-800">
           {{ message }}
         </div>
       {% endfor %}

@@ -15,6 +15,8 @@ from urllib.parse import quote
 from .models import Recipe, Ingredient, RecipeIngredient, Badge, BadgeAssignment, ShareEvent
 from .utils   import suggest_recipe
 
+from django.contrib import messages #Para el mensaje
+
 logger = logging.getLogger(__name__)
 
 def home(request) -> HttpResponse:
@@ -86,6 +88,13 @@ class SuggestView(LoginRequiredMixin, View):
             user=request.user,
             assigned_at__gte=recipe.created_at
         )
+        # ◾️ Lanzo un mensaje por cada nueva insignia
+        for assignment in nuevas:
+            badge = assignment.badge
+            messages.success(
+                request,
+                _(f"¡Enhorabuena! Has ganado la insignia «{badge.name}» – {badge.description}")
+            )
 
         # 6️⃣ Devuelvo la tarjeta + posibles nuevas_badges
         return render(
@@ -124,53 +133,53 @@ class TranslateView(LoginRequiredMixin, View):
             RecipeIngredient.objects.create(recipe=translated, ingredient=ri.ingredient, quantity=ri.quantity)
         return render(request, "recipes/_recipe_card.html", {"recipe": translated})
 
+
 class BadgeListView(LoginRequiredMixin, TemplateView):
-    template_name       = "recipes/badges.html"
-    login_url           = "login"
-    redirect_field_name = "next"
+    template_name = "recipes/badges.html"
 
     def get_context_data(self, **kwargs):
-        ctx          = super().get_context_data(**kwargs)
-        user         = self.request.user
-        all_badges   = Badge.objects.order_by("threshold")
+        # Obtener el contexto base de TemplateView
+        context = super().get_context_data(**kwargs)
+        usuario = self.request.user
 
-        recipes_count = Recipe.objects.filter(created_by=user, is_ai=True).count()
-        shares_count  = ShareEvent.objects.filter(user=user).count()
+        # Contar recetas IA y eventos de compartición del usuario
+        recetas_generadas = Recipe.objects.filter(created_by=usuario, is_ai=True).count()
+        veces_compartido  = ShareEvent.objects.filter(user=usuario).count()
 
-        owned_badges     = []
-        available_badges = []
-        coming_soon      = []
+        # Recoger IDs de insignias ya asignadas
+        asignadas_ids = BadgeAssignment.objects.filter(user=usuario) \
+                                               .values_list("badge_id", flat=True)
 
-        for badge in all_badges:
-            # Si ya la tiene asignada
-            if BadgeAssignment.objects.filter(user=user, badge=badge).exists():
-                badge.progress = badge.threshold  # completada
-                owned_badges.append(badge)
-                continue
+        # Preparar lista de "Tus Insignias" con progreso
+        insignias_ganadas = []
+        for insignia in Badge.objects.filter(id__in=asignadas_ids):
+            progreso = recetas_generadas if insignia.metric == "recipes" else veces_compartido
+            insignia.progress   = progreso
+            insignia.unit_label = dict(Badge.METRIC_CHOICES)[insignia.metric]
+            insignias_ganadas.append(insignia)
 
-            # Determinar métrica y unidad
-            name = badge.name.strip().lower()
-            if name == "partner":
-                progress = shares_count
-                unit = _("compartidos")
-            else:
-                progress = recipes_count
-                unit = _("recetas IA")
+        # Preparar insignias activas disponibles (aún no conseguidas)
+        disponibles = []
+        for insignia in Badge.objects.filter(active=True).exclude(id__in=asignadas_ids).order_by("threshold"):
+            progreso = recetas_generadas if insignia.metric == "recipes" else veces_compartido
+            insignia.progress   = progreso
+            insignia.unit_label = dict(Badge.METRIC_CHOICES)[insignia.metric]
+            disponibles.append(insignia)
 
-            badge.unit_label = unit
-            badge.progress   = progress
+        # Preparar insignias “Próximamente” (inactivas)
+        proximamente = []
+        for insignia in Badge.objects.filter(active=False).order_by("threshold"):
+            insignia.progress   = 0
+            insignia.unit_label = dict(Badge.METRIC_CHOICES)[insignia.metric]
+            proximamente.append(insignia)
 
-            if progress >= badge.threshold:
-                available_badges.append(badge)
-            else:
-                coming_soon.append(badge)
-
-        ctx.update({
-            "owned_badges":     owned_badges,
-            "available_badges": available_badges,
-            "coming_soon":      coming_soon,
+        # Añadir al contexto las tres listas de insignias
+        context.update({
+            "owned_badges":     insignias_ganadas,
+            "available_badges": disponibles,
+            "coming_soon":      proximamente,
         })
-        return ctx
+        return context
     
     
 @login_required
@@ -194,6 +203,14 @@ def share_app(request):
 
     if partner and total_shares >= partner.threshold:
         BadgeAssignment.objects.get_or_create(user=request.user, badge=partner)
+
+    if partner:
+        assigned, created = BadgeAssignment.objects.get_or_create(user=request.user, badge=partner)
+        if created:
+            messages.success(
+                request,
+                _(f"¡Enhorabuena! Has ganado la insignia «{partner.name}» – {partner.description}")
+            )
 
     # redirijo a WhatsApp con mensaje
     msg = quote(f"¡Mira ZeroWaste Recipes! {request.build_absolute_uri('/')}")
