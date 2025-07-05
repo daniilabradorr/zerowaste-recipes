@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}
+  {% if LANGUAGE_CODE == 'es' %}
+    Misión – ZeroWaste Recipes
+  {% else %}
+    Mission – ZeroWaste Recipes
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Hero Misión -->
+<section class="bg-green-50 rounded-xl overflow-hidden shadow-md">
+  <img src="{% static 'img/mission-hero.png' %}" 
+       alt="{% trans 'Nuestra misión' %}" 
+       class="w-full h-48 object-cover md:h-64">
+  <div class="p-6 text-center">
+    <h2 class="text-3xl font-serif text-primary mb-4">
+      {% if LANGUAGE_CODE == 'es' %}
+        Nuestra Misión
+      {% else %}
+        Our Mission
+      {% endif %}
+    </h2>
+    <p class="max-w-xl mx-auto text-gray-700">
+      {% if LANGUAGE_CODE == 'es' %}
+        En ZeroWaste Recipes creemos que cada ingrediente cuenta. Transformamos tus sobras en recetas deliciosas,
+        reducimos el desperdicio y la huella de CO₂, y empoderamos a nuestra comunidad para cocinar de forma
+        más sostenible.
+      {% else %}
+        At ZeroWaste Recipes we believe every ingredient matters. We turn your leftovers into delightful recipes,
+        cut waste and CO₂ emissions, and empower our community to cook more sustainably.
+      {% endif %}
+    </p>
+  </div>
+</section>
+
+<!-- Cómo Funciona -->
+<section class="mt-10">
+  <h3 class="text-2xl font-serif text-primary mb-4 text-center">
+    {% if LANGUAGE_CODE == 'es' %}¿Cómo Funciona?{% else %}How It Works{% endif %}
+  </h3>
+  <div class="space-y-6 md:space-y-0 md:grid md:grid-cols-3 md:gap-6">
+    <div class="p-4 bg-white rounded-lg shadow-sm">
+      <h4 class="font-semibold mb-2">1. Añade tus sobras</h4>
+      <p class="text-gray-600">
+        {% if LANGUAGE_CODE == 'es' %}
+          Escribe los ingredientes que tienes en tu nevera.
+        {% else %}
+          List the ingredients you have in your fridge.
+        {% endif %}
+      </p>
+    </div>
+    <div class="p-4 bg-white rounded-lg shadow-sm">
+      <h4 class="font-semibold mb-2">2. IA genera receta</h4>
+      <p class="text-gray-600">
+        {% if LANGUAGE_CODE == 'es' %}
+          Nuestra IA crea una receta optimizada para ti.
+        {% else %}
+          Our AI crafts a recipe optimized just for you.
+        {% endif %}
+      </p>
+    </div>
+    <div class="p-4 bg-white rounded-lg shadow-sm">
+      <h4 class="font-semibold mb-2">3. Cocina y ahorra</h4>
+      <p class="text-gray-600">
+        {% if LANGUAGE_CODE == 'es' %}
+          Minimiza el desperdicio y disfruta de platos deliciosos.
+        {% else %}
+          Minimize waste and enjoy delicious meals.
+        {% endif %}
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Beneficios -->
+<section class="mt-10 bg-white rounded-lg shadow-md p-6">
+  <h3 class="text-2xl font-serif text-primary mb-4 text-center">
+    {% if LANGUAGE_CODE == 'es' %}Beneficios{% else %}Benefits{% endif %}
+  </h3>
+  <ul class="list-disc list-inside space-y-2 text-gray-700">
+    <li>
+      {% if LANGUAGE_CODE == 'es' %}
+        Reduce tu huella de CO₂ cada vez que cocinas con sobras.
+      {% else %}
+        Reduce your CO₂ footprint each time you cook with leftovers.
+      {% endif %}
+    </li>
+    <li>
+      {% if LANGUAGE_CODE == 'es' %}
+        Descubre nuevas recetas creativas e internacionales.
+      {% else %}
+        Discover new and creative international recipes.
+      {% endif %}
+    </li>
+    <li>
+      {% if LANGUAGE_CODE == 'es' %}
+        Gana insignias y descuentos exclusivos en tiendas eco.
+      {% else %}
+        Earn badges and exclusive discounts at eco-friendly stores.
+      {% endif %}
+    </li>
+    <li>
+      {% if LANGUAGE_CODE == 'es' %}
+        Forma parte de una comunidad comprometida con el planeta.
+      {% else %}
+        Join a community committed to the planet.
+      {% endif %}
+    </li>
+  </ul>
+</section>
+
+<!-- Llamado a la acción -->
+<section class="mt-12 text-center">
+  <a href="{% url 'recipes:ingredients' %}"
+     class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition">
+    {% if LANGUAGE_CODE == 'es' %}
+      ¡Empieza Ahora!
+    {% else %}
+      Get Started!
+    {% endif %}
+  </a>
+</section>
+{% endblock %}

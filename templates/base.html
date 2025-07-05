@@ -1,24 +1,22 @@
-{% load static %}
 {% load static i18n %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}ZeroWaste Recipes{% endblock %}</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
-
-   <!-- PWA: manifest + registro del Service Worker -->
+  <!-- PWA: manifest + registro del Service Worker -->
   <link rel="manifest" href="{% static 'manifest.json' %}">
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register("{% static 'sw.js' %}");
     }
   </script>
-
 
   <!-- Tailwind CDN (válido para el MVP) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -43,18 +41,21 @@
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 <body class="font-sans bg-gray-50 text-gray-800">
+
   <!-- Header -->
-  <header class="bg-white shadow-md px-4 py-2 flex items-center gap-4">
+  <header class="bg-white shadow-md px-4 py-2 flex flex-wrap items-center gap-4">
     <img src="{% static 'img/logo32.png' %}" alt="Logo" width="32" height="32">
     <h1 class="font-serif text-xl">
       <a href="{% url 'recipes:home' %}">ZeroWaste Recipes</a>
     </h1>
 
     <!-- Navegación -->
-    <nav class="ml-auto flex items-center gap-4 text-sm text-gray-700">
+    <nav class="ml-auto flex flex-wrap items-center gap-4 text-sm text-gray-700">
       <a href="{% url 'recipes:home' %}" class="hover:underline">Inicio</a>
+      <a href="{% url 'recipes:mission' %}" class="hover:underline">Misión</a>
       <a href="{% url 'recipes:my_badges' %}" class="hover:underline">Insignias</a>
       <a href="{% url 'recipes:ingredients' %}" class="hover:underline">Mis ingredientes</a>
+
       {% if user.is_authenticated %}
         <a href="{% url 'recipes:share_app' %}?via=whatsapp"
            class="px-3 py-1 bg-secondary text-white rounded hover:bg-orange-600 transition">
@@ -82,9 +83,8 @@
             Salir
           </button>
         </form>
-      {% endif %}
-      {% if not user.is_authenticated %}
-        <a href="{% url 'login' %}"  class="hover:underline">Entrar</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="hover:underline">Entrar</a>
       {% endif %}
     </nav>
   </header>
@@ -99,36 +99,25 @@
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 64 64"
     >
-      <!-- Grupo de hojas que gira alrededor del centro (32,32) -->
       <g class="animate-spin" style="transform-origin: 32px 32px;">
-        <!-- Hoja ampliada y colocada en el tope -->
-        <path
-          d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
-          fill="currentColor"
-          transform="translate(32,4) scale(1.5)"
-        />
-        <!-- Clones rotados cada 90° -->
-        <path
-          d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
-          fill="currentColor"
-          transform="rotate(90 32 32) translate(32,4) scale(1.5)"
-        />
-        <path
-          d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
-          fill="currentColor"
-          transform="rotate(180 32 32) translate(32,4) scale(1.5)"
-        />
-        <path
-          d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
-          fill="currentColor"
-          transform="rotate(270 32 32) translate(32,4) scale(1.5)"
-        />
+        <path d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
+              fill="currentColor"
+              transform="translate(32,4) scale(1.5)"/>
+        <path d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
+              fill="currentColor"
+              transform="rotate(90 32 32) translate(32,4) scale(1.5)"/>
+        <path d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
+              fill="currentColor"
+              transform="rotate(180 32 32) translate(32,4) scale(1.5)"/>
+        <path d="M2,8 C2,4 6,2 10,6 C14,10 10,14 6,12 C2,10 2,8 2,8Z"
+              fill="currentColor"
+              transform="rotate(270 32 32) translate(32,4) scale(1.5)"/>
       </g>
     </svg>
   </div>
 
   <!-- Contenido -->
-  <main class="container mx-auto p-4">
+  <main class="mx-auto w-full max-w-screen-sm p-4">
     {% block content %}{% endblock %}
   </main>
 
@@ -164,7 +153,7 @@
       function getCookie(name) {
         return document.cookie.split('; ').reduce((r, v) => {
           const parts = v.split('=');
-          return parts[0] === name ? decodeURIComponent(parts[1]) : r
+          return parts[0] === name ? decodeURIComponent(parts[1]) : r;
         }, '');
       }
       const banner = document.getElementById('cookie-banner');
@@ -178,37 +167,33 @@
     });
   </script>
 
-  <!-- Scripts -->
   <script>
     function showModal(message, btnText, btnHref){
-      // Crear overlay
       const overlay = document.createElement("div");
       overlay.className = "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center";
-      // Contenedor
       const box = document.createElement("div");
       box.className = "bg-white p-6 rounded-lg shadow-lg max-w-sm text-center";
       box.innerHTML = `
         <p class="mb-4">${message}</p>
         <a href="${btnHref}"
-          class="px-4 py-2 bg-primary text-white rounded">${btnText}</a>
+           class="px-4 py-2 bg-primary text-white rounded">${btnText}</a>
       `;
       overlay.appendChild(box);
       document.body.appendChild(overlay);
-      // Cerrar al click fuera
       overlay.addEventListener("click", e => {
-        if (e.target===overlay) overlay.remove();
+        if (e.target === overlay) overlay.remove();
       });
     }
   </script>
 
   <script>
-    document.body.addEventListener('htmx:configRequest', (evt) => {
+    document.body.addEventListener('htmx:configRequest', () => {
       document.getElementById('htmx-spinner').classList.remove('hidden');
     });
-    document.body.addEventListener('htmx:afterOnLoad', (evt) => {
+    document.body.addEventListener('htmx:afterOnLoad', () => {
       document.getElementById('htmx-spinner').classList.add('hidden');
     });
-    document.body.addEventListener('htmx:responseError', (evt) => {
+    document.body.addEventListener('htmx:responseError', () => {
       document.getElementById('htmx-spinner').classList.add('hidden');
     });
   </script>

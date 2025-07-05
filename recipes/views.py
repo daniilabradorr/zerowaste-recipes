@@ -164,3 +164,10 @@ def share_app(request):
     # redirijo a WhatsApp con mensaje
     msg = quote(f"¡Mira ZeroWaste Recipes! {request.build_absolute_uri('/')}")
     return redirect(f"https://api.whatsapp.com/send?text={msg}")
+
+
+class MissionView(TemplateView):
+    """
+    Muestro la página 'Nuestra Misión' con texto adaptado a ES/EN
+    """
+    template_name = "recipes/mission.html"

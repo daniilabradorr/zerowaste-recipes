@@ -24,10 +24,16 @@
       {% csrf_token %}
       {{ form.username.label_tag }}
       {{ form.username|add_class:"w-full p-2 border rounded" }}
+
+      {{ form.email.label_tag }}
+      {{ form.email|add_class:"w-full p-2 border rounded" }}
+
       {{ form.password1.label_tag }}
       {{ form.password1|add_class:"w-full p-2 border rounded" }}
+
       {{ form.password2.label_tag }}
       {{ form.password2|add_class:"w-full p-2 border rounded" }}
+
       <button type="submit"
               class="w-full py-2 bg-primary text-white rounded-xl hover:bg-green-600 transition">
         Crear cuenta

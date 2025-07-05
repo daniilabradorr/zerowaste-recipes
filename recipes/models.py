@@ -170,17 +170,41 @@ class ShareEvent(models.Model):
 # —————————————————————————————————————————
 # Insignias y asignaciones
 class Badge(models.Model):
-    name       = models.CharField(max_length=50, unique=True, help_text=_("Ej. Starter, Eco-Hero, Partner"))
-    icon       = models.ImageField(upload_to="badges/", help_text=_("SVG o PNG"))
-    threshold  = models.PositiveIntegerField(default=0, help_text=_("Umbral de recetas o shares"))
-    active     = models.BooleanField(default=True, help_text=_("Disponible o Próximamente"))
-    discount   = models.PositiveSmallIntegerField(default=0, help_text=_("Descuento (%)"))
-
-    class Meta:
-        ordering = ["threshold", "name"]
-
-    def __str__(self) -> str:
-        return f"{self.name} ({self.threshold})"
+    """
+    Yo creo una insignia con:
+    - name:       nombre único
+    - icon:       imagen SVG/PNG o emoji
+    - description: texto que explica qué es la insignia y qué beneficio ofrece
+    - threshold:  cuántas acciones (recetas, compartidos…) para desbloquearla
+    - active:     si ya está disponible o es “próximamente”
+    - discount:   porcentaje de descuento futuro (opcional)
+    """
+    name        = models.CharField(
+        max_length=50,
+        unique=True,
+        help_text=_("Ej. Starter, Eco-Hero")
+    )
+    icon        = models.ImageField(
+        upload_to="badges/",
+        help_text=_("SVG o PNG para mostrar en la UI")
+    )
+    description = models.TextField(
+        default="",
+        blank=True,
+        help_text=_("Descripción de la insignia y beneficio que otorga")
+    )
+    threshold   = models.PositiveIntegerField(
+        default=0,
+        help_text=_("Número de acciones necesarias para desbloquear")
+    )
+    active      = models.BooleanField(
+        default=True,
+        help_text=_("Si ya está disponible o aparece como Próximamente")
+    )
+    discount    = models.PositiveSmallIntegerField(
+        default=0,
+        help_text=_("Descuento (%) que ofrece esta insignia cuando esté activa")
+    )
 
 
 class BadgeAssignment(models.Model):
