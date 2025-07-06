@@ -189,10 +189,6 @@ class Badge(models.Model):
         unique=True,
         help_text=_("Ej. Starter, Eco-Hero")
     )
-    icon        = models.ImageField(
-        upload_to="badges/",
-        help_text=_("SVG o PNG para mostrar en la UI")
-    )
     description = models.TextField(
         default="",
         blank=True,
