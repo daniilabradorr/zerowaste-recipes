@@ -138,7 +138,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 #Para producción en render usare collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+STATICFILES_STORAGE = (
+  "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)
 
 
 MEDIA_URL = "/media/"
