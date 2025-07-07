@@ -35,7 +35,9 @@ INSTALLED_APPS = [
 
     'widget_tweaks',  # Para modificar widgets de formularios
 
-    "django_htmx",
+    "django_htmx", # Para manejar peticiones HTMX
+
+    "ckeditor", #para el editor de texto enriquecido
     
 ]
 
@@ -142,6 +144,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+CKEDITOR_UPLOAD_PATH = "uploads/" #Aunque no lo voy a usar, lo dejo por si acaso
 
 
 # Default primary key field type

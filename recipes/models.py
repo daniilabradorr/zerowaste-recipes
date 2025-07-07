@@ -10,6 +10,8 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from ckeditor.fields import RichTextField
+
 User = get_user_model()
 logger = logging.getLogger(__name__)
 
@@ -184,31 +186,31 @@ class Badge(models.Model):
     - active:     si ya está disponible o es “próximamente”
     - discount:   porcentaje de descuento futuro (opcional)
     """
-    name        = models.CharField(
+    name = models.CharField(
         max_length=50,
         unique=True,
         help_text=_("Ej. Starter, Eco-Hero")
     )
-    description = models.TextField(
+    description = RichTextField(
         default="",
         blank=True,
         help_text=_("Descripción de la insignia y beneficio que otorga")
     )
-    threshold   = models.PositiveIntegerField(
+    threshold = models.PositiveIntegerField(
         default=0,
         help_text=_("Número de acciones necesarias para desbloquear")
     )
-    metric      = models.CharField(
+    metric = models.CharField(
         max_length=10,
         choices=METRIC_CHOICES,
         default="recipes",
         help_text=_("Tipo de métrica para esta insignia")
     )
-    active      = models.BooleanField(
+    active = models.BooleanField(
         default=True,
         help_text=_("Si ya está disponible o aparece como Próximamente")
     )
-    discount    = models.PositiveSmallIntegerField(
+    discount = models.PositiveSmallIntegerField(
         default=0,
         help_text=_("Descuento (%) que ofrece esta insignia cuando esté activa")
     )
