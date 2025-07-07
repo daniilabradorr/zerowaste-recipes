@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}
+  500 – {% trans "Error interno del servidor" %}
+{% endblock %}
+
+{% block content %}
+<section class="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
+  <!-- Icono grande de advertencia -->
+  <svg xmlns="http://www.w3.org/2000/svg"
+       class="w-24 h-24 text-red-500 mb-6 animate-pulse"
+       fill="none" viewBox="0 0 24 24"
+       stroke="currentColor" stroke-width="1.5">
+    <path stroke-linecap="round" stroke-linejoin="round"
+          d="M12 9v2m0 4h.01M10.29 3.86l-7.14 12.36A1.5 1.5 0 004.5 18h15a1.5 1.5 0 001.35-2.78L13.71 3.86a1.5 1.5 0 00-2.42 0z" />
+  </svg>
+
+  <!-- Título principal -->
+  <h1 class="text-4xl font-serif text-gray-800 mb-4">
+    {% trans "¡Vaya!" %}
+  </h1>
+
+  <!-- Descripción del error -->
+  <p class="text-lg text-gray-600 max-w-xl text-center mb-6">
+    {% trans "Parece que algo salió mal en el servidor." %}
+    <br>
+    {% trans "Nuestro equipo ya está trabajando para solucionarlo." %}
+  </p>
+
+  <!-- Botón para volver al inicio -->
+  <a href="{% url 'recipes:home' %}"
+     class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-full transition">
+    {% trans "Volver al inicio" %}
+  </a>
+</section>
+{% endblock %}
