@@ -6,8 +6,10 @@ services:
 
     # Instalamos dependencias y preparamos los estáticos
     buildCommand: |
-      pip install -r requirements.txt
-      python manage.py collectstatic --noinput
+        pip install -r requirements.txt
+        python manage.py collectstatic --noinput --clear
+        echo "=== CONTENTS OF staticfiles/ ==="
+        find staticfiles -type f
 
     # Aplicamos migraciones antes de desplegar
     preDeployCommand: python manage.py migrate --noinput
