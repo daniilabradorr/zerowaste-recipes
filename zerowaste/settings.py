@@ -18,7 +18,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["zerowaste-recipes.onrender.com"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
