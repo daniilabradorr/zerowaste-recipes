@@ -27,9 +27,7 @@ ZeroWaste Recipes es una aplicación web full-stack (Django + HTMX + PWA) que ut
 
 ## 🚀 Demo & Despliegue
 
-- **URL producción (Render):** `https://zerowaste-recipes.onrender.com`
-- Dominio propio:  
-  > 🌐 Ya tienes tu dominio configurado apuntando a Render.  
+- **URL producción BETA(Render):** `https://zerowaste-recipes.onrender.com`
 
 ---
 
