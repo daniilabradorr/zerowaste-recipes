@@ -7,7 +7,7 @@ services:
     # Instalamos dependencias
     buildCommand: |
       pip install -r requirements.txt
-      python manage.py collectstatic --noinput --clear 
+      python manage.py collectstatic --noinput --clear --verbosity 2 || exit 1 
 
     # Aplicamos migraciones antes de recoger estáticos
     preDeployCommand: |
