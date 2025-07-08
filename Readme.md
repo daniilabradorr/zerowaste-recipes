@@ -3,8 +3,8 @@
 ![Logo](static/img/logo32.png)
 
 **Convierte sobras en comidas y cenas deliciosas** / **Turn leftovers into delicious dinners**
+[text](https://zerowaste-recipes.onrender.com)
 
-(SIGUE EN DESARROLLO PARA UN DESARROLLO PROFESIONAL NO SOLO YA ESTUDIANTIL, por eso sigue en Debug = True)
 ZeroWaste Recipes es una aplicación web full-stack (Django + HTMX + PWA) que utiliza IA para generar recetas creativas a partir de los ingredientes que ya tienes en tu nevera, calcula la huella de CO₂ evitada y premia tu compromiso con insignias gamificadas.
 
 ---
