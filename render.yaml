@@ -7,11 +7,11 @@ services:
     # Instalamos dependencias
     buildCommand: |
       pip install -r requirements.txt
+      python manage.py collectstatic --noinput --clear 
 
     # Aplicamos migraciones antes de recoger estáticos
     preDeployCommand: |
       python manage.py migrate --noinput
-      python manage.py collectstatic --noinput --clear
 
     # Arrancamos Gunicorn en el puerto asignado por Render
     startCommand: |
