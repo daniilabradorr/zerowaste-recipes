@@ -45,9 +45,13 @@
   <link rel="manifest" href="{% static 'manifest.json' %}">
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register("{% static 'sw.js' %}");
+      navigator.serviceWorker
+        .register("{% static 'sw.js' %}")
+        .then(reg => console.log('SW registrado, scope:', reg.scope))
+        .catch(err => console.error('Error registrando SW:', err));
     }
   </script>
+
 
   {# Tailwind CDN (MVP) #}
   <script src="https://cdn.tailwindcss.com"></script>

@@ -118,15 +118,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = '/static/'
 
-if not DEBUG:
-    # En producción, servimos estáticos desde el Static Site en Render
-    STATIC_URL = "https://zerowaste-recipes-1.onrender.com/"
-    # WhiteNoise sirve con compresión, sin manifest
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
-else:
-    # Para desarrollo local
-    STATIC_URL = "/static/"
 
 # Media files
 MEDIA_URL = "/media/"
