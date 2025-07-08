@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"  # Lo convierto en booleano
 
-ALLOWED_HOSTS = ["zerowaste-recipes.onrender.com"]
+ALLOWED_HOSTS = ["*","zerowaste-recipes.onrender.com"]
 
 
 # Application definition
