@@ -1,6 +1,20 @@
 {# Mobile-first design: estilos por defecto para móviles, MD: para pantallas medianas+ #}
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
+
+{# SEO enhancements: meta description and JSON-LD #}
+{% block head_extra %}
+  <meta name="description" content="{% if LANGUAGE_CODE == 'es' %}ZeroWaste Recipes aprovecha IA de última generación para convertir sobras en cenas deliciosas, reduciendo hasta un 40 % de CO₂ por plato.{% else %}ZeroWaste Recipes leverages cutting-edge AI to turn leftovers into delicious dinners, cutting up to 40% of CO₂ per meal.{% endif %}">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "ZeroWaste Recipes",
+    "description": "{% if LANGUAGE_CODE == 'es' %}Convierte sobras en cenas deliciosas usando IA y reduce hasta un 40 % de CO₂.{% else %}Turn leftovers into delicious dinners with AI and cut up to 40% CO₂.{% endif %}"
+  }
+  </script>
+{% endblock %}
+
 {% block title %}
   {% if LANGUAGE_CODE == 'es' %}
     ZeroWaste Recipes – Convierte sobras en cenas deliciosas
@@ -10,93 +24,90 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero -->
-<section class="bg-green-50 rounded-xl p-6 sm:p-8 shadow-lg text-center">
+<!-- Hero Section -->
+<section id="hero-section" role="region" aria-labelledby="hero-heading" class="bg-green-50 rounded-xl p-6 sm:p-8 shadow-lg text-center">
   {% if LANGUAGE_CODE == 'es' %}
-    <h2 class="text-3xl md:text-4xl font-serif text-primary mb-4">
+    <h1 id="hero-heading" class="text-3xl md:text-4xl font-serif text-primary mb-4">
       Convierte sobras en cenas deliciosas
-    </h2>
+    </h1>
     <p class="text-base md:text-lg text-gray-700 max-w-xl md:max-w-2xl mx-auto mb-6">
       ZeroWaste Recipes aprovecha IA de última generación como Groq Llama-3 para crear recetas personalizadas que maximizan el sabor y reducen el desperdicio, disminuyendo hasta un 40 % de CO₂ por plato.
     </p>
     <a href="{% url 'recipes:ingredients' %}"
        class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-6 md:px-8 py-2 md:py-3 rounded-full transition mb-6 md:mb-8">
-       ➜ {% if LANGUAGE_CODE == 'es' %}Probar ahora{% else %}Try now{% endif %}
+       ➜ Probar ahora
     </a>
   {% else %}
-    <!-- Versión en inglés ya cubierta arriba -->
-  {% endif %}
-
-  <!-- My Badges Section -->
-  <div id="my-badges" class="mx-auto max-w-xl md:max-w-3xl">
-    <h3 class="text-xl md:text-2xl font-serif text-primary mb-4">
-      {% if LANGUAGE_CODE == 'es' %}Mis Insignias{% else %}My Badges{% endif %}
-    </h3>
-    {% if user_badges %}
-      <div class="flex justify-center flex-wrap gap-4 mb-6">
-        {% for assignment in user_badges %}
-          <div class="flex flex-col items-center bg-green-100 px-4 md:px-5 py-3 md:py-4 rounded-2xl shadow-lg hover:scale-105 transform transition">
-            <div class="w-16 h-16 md:w-20 md:h-20 mb-2 rounded-full overflow-hidden border-2 border-green-300">
-              {% if assignment.badge.name == "Starter" %}
-                <picture>
-                  <source srcset="{% static 'img/badges/Starter.webp' %}" type="image/webp">
-                  <img src="{% static 'img/badges/Starter.png' %}" alt="Starter badge"
-                       width="80" height="80" loading="lazy" decoding="async"
-                       class="w-full h-full object-contain">
-                </picture>
-              {% elif assignment.badge.name == "Partner" %}
-                <picture>
-                  <source srcset="{% static 'img/badges/Partner.webp' %}" type="image/webp">
-                  <img src="{% static 'img/badges/Partner.png' %}" alt="Partner badge"
-                       width="80" height="80" loading="lazy" decoding="async"
-                       class="w-full h-full object-contain">
-                </picture>
-              {% elif assignment.badge.name == "Co2-Helper" %}
-                <picture>
-                  <source srcset="{% static 'img/badges/CO2Helper.webp' %}" type="image/webp">
-                  <img src="{% static 'img/badges/CO2Helper.png' %}" alt="Co2-Helper badge"
-                       width="80" height="80" loading="lazy" decoding="async"
-                       class="w-full h-full object-contain">
-                </picture>
-              {% elif assignment.badge.name == "Eco-Veteran" %}
-                <picture>
-                  <source srcset="{% static 'img/badges/EcoVeteran.webp' %}" type="image/webp">
-                  <img src="{% static 'img/badges/EcoVeteran.png' %}" alt="Eco-Veteran badge"
-                       width="80" height="80" loading="lazy" decoding="async"
-                       class="w-full h-full object-contain">
-                </picture>
-              {% endif %}
-            </div>
-            <span class="font-medium text-sm md:text-base">{{ assignment.badge.name }}</span>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p class="text-gray-600 mb-6 text-sm md:text-base">
-        {% if LANGUAGE_CODE == 'es' %}
-          Aún no tienes insignias. ¡Genera tu primera receta IA!
-        {% else %}
-          You don’t have any badges yet. Create your first AI recipe!
-        {% endif %}
-      </p>
-    {% endif %}
-
-    <a href="{% url 'recipes:my_badges' %}"
-       class="inline-block bg-secondary hover:bg-orange-600 text-white font-semibold px-5 md:px-6 py-2 rounded-full transition">
-      {% if LANGUAGE_CODE == 'es' %}Ver insignias disponibles{% else %}View all badges{% endif %}
+    <h1 id="hero-heading" class="text-3xl md:text-4xl font-serif text-primary mb-4">
+      Turn leftovers into delicious dinners
+    </h1>
+    <p class="text-base md:text-lg text-gray-700 max-w-xl md:max-w-2xl mx-auto mb-6">
+      ZeroWaste Recipes leverages cutting-edge AI like Groq Llama-3 to craft personalized recipes that maximize flavor while reducing waste, cutting up to 40 % of CO₂ per meal.
+    </p>
+    <a href="{% url 'recipes:ingredients' %}"
+       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-6 md:px-8 py-2 md:py-3 rounded-full transition mb-6 md:mb-8">
+       ➜ Try now
     </a>
-  </div>
+  {% endif %}
 </section>
 
-<!-- Features -->
-<section class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-10 md:mt-12">
+<!-- My Badges Section -->
+<section id="badges-section" role="region" aria-labelledby="badges-heading" class="mx-auto max-w-xl md:max-w-3xl mt-10">
+  <h2 id="badges-heading" class="text-xl md:text-2xl font-serif text-primary mb-4">
+    {% if LANGUAGE_CODE == 'es' %}Mis Insignias{% else %}My Badges{% endif %}
+  </h2>
+  {% if user_badges %}
+    <div class="flex justify-center flex-wrap gap-4 mb-6">
+      {% for assignment in user_badges %}
+        <div class="flex flex-col items-center bg-green-100 px-4 md:px-5 py-3 md:py-4 rounded-2xl shadow-lg hover:scale-105 transform transition">
+          <div class="w-16 h-16 md:w-20 md:h-20 mb-2 rounded-full overflow-hidden border-2 border-green-300">
+            {% if assignment.badge.name == "Starter" %}
+              <picture>
+                <source srcset="{% static 'img/badges/Starter.webp' %}" type="image/webp">
+                <img src="{% static 'img/badges/Starter.png' %}" alt="Insignia Starter otorgada por primera receta IA" width="80" height="80" loading="lazy" decoding="async" class="w-full h-full object-contain">
+              </picture>
+            {% elif assignment.badge.name == "Partner" %}
+              <picture>
+                <source srcset="{% static 'img/badges/Partner.webp' %}" type="image/webp">
+                <img src="{% static 'img/badges/Partner.png' %}" alt="Insignia Partner obtenida por colaboración" width="80" height="80" loading="lazy" decoding="async" class="w-full h-full object-contain">
+              </picture>
+            {% elif assignment.badge.name == "Co2-Helper" %}
+              <picture>
+                <source srcset="{% static 'img/badges/CO2Helper.webp' %}" type="image/webp">
+                <img src="{% static 'img/badges/CO2Helper.png' %}" alt="Insignia Co2-Helper por reducir CO₂" width="80" height="80" loading="lazy" decoding="async" class="w-full h-full object-contain">
+              </picture>
+            {% elif assignment.badge.name == "Eco-Veteran" %}
+              <picture>
+                <source srcset="{% static 'img/badges/EcoVeteran.webp' %}" type="image/webp">
+                <img src="{% static 'img/badges/EcoVeteran.png' %}" alt="Insignia Eco-Veteran por uso prolongado" width="80" height="80" loading="lazy" decoding="async" class="w-full h-full object-contain">
+              </picture>
+            {% endif %}
+          </div>
+          <span class="font-medium text-sm md:text-base">{{ assignment.badge.name }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-gray-600 mb-6 text-sm md:text-base">
+      {% if LANGUAGE_CODE == 'es' %}Aún no tienes insignias. ¡Genera tu primera receta IA!{% else %}You don’t have any badges yet. Create your first AI recipe!{% endif %}
+    </p>
+  {% endif %}
+  <a href="{% url 'recipes:my_badges' %}" class="inline-block bg-secondary hover:bg-orange-600 text-white font-semibold px-5 md:px-6 py-2 rounded-full transition">
+    {% if LANGUAGE_CODE == 'es' %}Ver insignias disponibles{% else %}View all badges{% endif %}
+  </a>
+</section>
+
+<!-- Features Section -->
+<section id="features-section" role="region" aria-labelledby="features-heading" class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-10 md:mt-12">
+  <h2 id="features-heading" class="sr-only">{% if LANGUAGE_CODE == 'es' %}Características{% else %}Features{% endif %}</h2>
+
   <!-- AI Recipes Feature -->
-  <div class="group p-5 md:p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+  <div class="group p-5 md:p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition" role="article">
     <div class="flex items-center mb-3 md:mb-4">
       <span class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-primary/20 text-primary rounded-full mr-3 md:mr-4 text-xl md:text-2xl">🍳</span>
-      <h4 class="font-serif text-lg md:text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+      <h3 class="font-serif text-lg md:text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
         {% if LANGUAGE_CODE == 'es' %}Recetas IA Personalizadas{% else %}Personalized AI Recipes{% endif %}
-      </h4>
+      </h3>
     </div>
     <p class="text-sm md:text-base text-gray-600">
       {% if LANGUAGE_CODE == 'es' %}Nuestra IA analiza tus ingredientes y preferencias para generar recetas únicas y equilibradas al instante.{% else %}Our AI analyzes your ingredients and preferences to generate balanced, one-of-a-kind recipes in seconds.{% endif %}
@@ -104,12 +115,12 @@
   </div>
 
   <!-- Badges & Perks Feature -->
-  <div class="group p-5 md:p-6 bg-white rounded-2xl ring-2 ring-dashed ring-secondary/30 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+  <div class="group p-5 md:p-6 bg-white rounded-2xl ring-2 ring-dashed ring-secondary/30 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition" role="article">
     <div class="flex items-center mb-3 md:mb-4">
       <span class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-secondary/20 text-secondary rounded-full mr-3 md:mr-4 text-xl md:text-2xl">🏅</span>
-      <h4 class="font-serif text-lg md:text-xl font-semibold text-gray-800 group-hover:text-secondary transition-colors">
+      <h3 class="font-serif text-lg md:text-xl font-semibold text-gray-800 group-hover:text-secondary transition-colors">
         {% if LANGUAGE_CODE == 'es' %}Insignias & Ventajas{% else %}Badges & Perks{% endif %}
-      </h4>
+      </h3>
     </div>
     <ul class="list-disc list-inside text-sm md:text-base text-gray-600 space-y-1">
       {% if LANGUAGE_CODE == 'es' %}
@@ -125,12 +136,12 @@
   </div>
 
   <!-- Offline PWA Feature -->
-  <div class="group p-5 md:p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+  <div class="group p-5 md:p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition" role="article">
     <div class="flex items-center mb-3 md:mb-4">
       <span class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-primary/20 text-primary rounded-full mr-3 md:mr-4 text-xl md:text-2xl">📱</span>
-      <h4 class="font-serif text-lg md:text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+      <h3 class="font-serif text-lg md:text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
         {% if LANGUAGE_CODE == 'es' %}PWA Offline Avanzada{% else %}Advanced Offline PWA{% endif %}
-      </h4>
+      </h3>
     </div>
     <p class="text-sm md:text-base text-gray-600">
       {% if LANGUAGE_CODE == 'es' %}Instala la PWA para acceder a tus recetas favoritas, listas de ingredientes y pasos de cocina incluso sin conexión, con sincronización automática al reconectar.{% else %}Install the PWA to access your favorite recipes, ingredient lists, and cooking steps even offline, with automatic sync when you reconnect.{% endif %}
