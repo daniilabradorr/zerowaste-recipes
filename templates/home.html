@@ -16,7 +16,7 @@
       Convierte sobras en cenas deliciosas
     </h2>
     <p class="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
-      ZeroWaste Recipes usa IA para sugerirte recetas creativas y reducir CO₂. 
+      ZeroWaste Recipes usa IA para sugerirte recetas creativas y reducir CO₂.
       Sube de nivel y desbloquea beneficios exclusivos.
     </p>
     <a href="{% url 'recipes:ingredients' %}"
@@ -28,7 +28,7 @@
       Turn leftovers into delicious dinners
     </h2>
     <p class="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
-      ZeroWaste Recipes uses AI to suggest creative recipes and cut CO₂. 
+      ZeroWaste Recipes uses AI to suggest creative recipes and cut CO₂.
       Level up to unlock exclusive perks.
     </p>
     <a href="{% url 'recipes:ingredients' %}"
@@ -37,56 +37,37 @@
     </a>
   {% endif %}
 
-  <!-- Mis Insignias (centrado eje X) -->
+  <!-- My Badges Section -->
   <div id="my-badges" class="mx-auto max-w-3xl">
-    <!-- mx-auto: pongo márgenes automáticos para centrar en X -->
-    <!-- max-w-3xl: limito ancho máximo a ≈48rem para que no se extienda demasiado -->
     <h3 class="text-2xl font-serif text-primary mb-4">
       {% if LANGUAGE_CODE == 'es' %}Mis Insignias{% else %}My Badges{% endif %}
     </h3>
     {% if user_badges %}
       <div class="flex justify-center flex-wrap gap-4 mb-6">
-        <!-- flex: organizo en fila para poder wrappear -->
-        <!-- justify-center: centro los items horizontalmente -->
-        <!-- flex-wrap: permito que las badges pasen a otra línea si no caben -->
-        <!-- gap-4: dejo 1rem de espacio entre cada badge -->
-        <!-- mb-6: separo del siguiente bloque con 1.5rem abajo -->
         {% for assignment in user_badges %}
           <div class="flex flex-col items-center bg-green-100 px-5 py-4 rounded-2xl shadow-lg hover:scale-105 transform transition">
-            <!-- flex flex-col: coloco icono y texto verticalmente -->
-            <!-- items-center: centro contenido en X -->
-            <!-- bg-green-100: fondo verde claro para distinguir -->
-            <!-- px-5 py-4: padding horizontal 1.25rem, vertical 1rem -->
-            <!-- rounded-2xl: bordes muy redondeados para estilo “pill” -->
-            <!-- shadow-lg: sombra pronunciada -->
-            <!-- hover:scale-105: agrando 5% al pasar ratón -->
-            <!-- transform transition: habilito animación suave -->
             <div class="w-16 h-16 mb-2 rounded-full overflow-hidden border-2 border-green-300">
-              <!-- w-16 h-16: contenedor de 64×64px -->
-              <!-- mb-2: margen inferior 0.5rem -->
-              <!-- rounded-full: círculo perfecto -->
-              <!-- overflow-hidden: recorto la imagen al círculo -->
-              <!-- border-2 border-green-300: marco sutil para destacar icono -->
-              {% if assignment.badge.name == "Starter" %}
-                <img src="{% static 'img/badges/Starter.png' %}"
-                     alt="{{ assignment.badge.name }}"
-                     class="w-full h-full object-contain">
-              {% elif assignment.badge.name == "Partner" %}
-                <img src="{% static 'img/badges/Partner.png' %}"
-                     alt="{{ assignment.badge.name }}"
-                     class="w-full h-full object-contain">
-              {% elif assignment.badge.name == "Co2-Helper" %}
-                <img src="{% static 'img/badges/CO2Helper.png' %}"
-                     alt="{{ assignment.badge.name }}"
-                     class="w-full h-full object-contain">
-              {% elif assignment.badge.name == "Eco-Veteran" %}
-                <img src="{% static 'img/badges/EcoVeteran.png' %}"
-                     alt="{{ assignment.badge.name }}"
-                     class="w-full h-full object-contain">
-              {% endif %}
+              {% with badge_name=assignment.badge.name|slugify %}
+                <picture>
+                  <!-- WebP for modern browsers -->
+                  <source
+                    srcset="{% static 'img/badges/'|add:badge_name|add:'.webp' %}"
+                    type="image/webp"
+                  >
+                  <!-- PNG fallback -->
+                  <img
+                    src="{% static 'img/badges/'|add:badge_name|add:'.png' %}"
+                    alt="{{ assignment.badge.name }} badge"
+                    width="64"
+                    height="64"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-full object-contain"
+                  >
+                </picture>
+              {% endwith %}
             </div>
             <span class="font-medium">{{ assignment.badge.name }}</span>
-            <!-- font-medium: peso medio para que destaque sin ser demasiado grande -->
           </div>
         {% endfor %}
       </div>
@@ -100,68 +81,58 @@
       </p>
     {% endif %}
 
-    <!-- Botón para ver todas las insignias disponibles -->
     <a href="{% url 'recipes:my_badges' %}"
        class="inline-block bg-secondary hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-full transition">
-      <!-- inline-block: lo trato como botón -->
-      <!-- bg-secondary: fondo naranja -->
-      <!-- hover:bg-orange-600: tono más oscuro al hover -->
-      <!-- text-white font-semibold: texto blanco seminegrita -->
-      <!-- px-6 py-2: padding horizontal 1.5rem, vertical 0.5rem -->
-      <!-- rounded-full: bordes redondeados tipo píldora -->
-      <!-- transition: animación suave en hover -->
-      {% if LANGUAGE_CODE == 'es' %}
-        Ver insignias disponibles
-      {% else %}
-        View all badges
-      {% endif %}
+      {% if LANGUAGE_CODE == 'es' %}Ver insignias disponibles{% else %}View all badges{% endif %}
     </a>
   </div>
 </section>
 
 <!-- Features -->
 <section class="grid md:grid-cols-3 gap-8 mt-12">
-  {% if LANGUAGE_CODE == 'es' %}
-    <!-- Recetas IA -->
-    <div class="group p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
-      <div class="flex items-center mb-4">
-        <span class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-full mr-4 text-2xl">🍳</span>
-        <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
-          Recetas IA
-        </h4>
-      </div>
-      <p class="text-gray-600">
-        Groq Llama-3 crea platos únicos optimizados para tus ingredientes.
-      </p>
+  {% comment %} Spanish section; mirror in English if needed {% endcomment %}
+  <div class="group p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+    <div class="flex items-center mb-4">
+      <span class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-full mr-4 text-2xl">🍳</span>
+      <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+        {% if LANGUAGE_CODE == 'es' %}Recetas IA{% else %}AI Recipes{% endif %}
+      </h4>
     </div>
+    <p class="text-gray-600">
+      {% if LANGUAGE_CODE == 'es' %}Groq Llama-3 crea platos únicos optimizados para tus ingredientes.{% else %}Groq Llama-3 creates unique dishes optimized for your ingredients.{% endif %}
+    </p>
+  </div>
 
-    <!-- Insignias & Ventajas -->
-    <div class="group p-6 bg-white rounded-2xl ring-2 ring-dashed ring-secondary/30 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
-      <div class="flex items-center mb-4">
-        <span class="inline-flex items-center justify-center w-12 h-12 bg-secondary/20 text-secondary rounded-full mr-4 text-2xl">🏅</span>
-        <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-secondary transition-colors">
-          Insignias & Ventajas
-        </h4>
-      </div>
-      <ul class="list-disc list-inside text-gray-600 space-y-1">
+  <div class="group p-6 bg-white rounded-2xl ring-2 ring-dashed ring-secondary/30 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+    <div class="flex items-center mb-4">
+      <span class="inline-flex items-center justify-center w-12 h-12 bg-secondary/20 text-secondary rounded-full mr-4 text-2xl">🏅</span>
+      <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-secondary transition-colors">
+        {% if LANGUAGE_CODE == 'es' %}Insignias & Ventajas{% else %}Badges & Perks{% endif %}
+      </h4>
+    </div>
+    <ul class="list-disc list-inside text-gray-600 space-y-1">
+      {% if LANGUAGE_CODE == 'es' %}
         <li>Exclusividad en tienda: descuentos en productos eco.</li>
         <li>Newsletter gratuito: beneficios antes que nadie.</li>
         <li>Gamificación: sube de nivel y presume tus logros.</li>
-      </ul>
-    </div>
+      {% else %}
+        <li>Store exclusives: discounts on eco-friendly products.</li>
+        <li>Free newsletter: perks before anyone else.</li>
+        <li>Gamification: level up and show off your achievements.</li>
+      {% endif %}
+    </ul>
+  </div>
 
-    <!-- PWA sin conexión -->
-    <div class="group p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
-      <div class="flex items-center mb-4">
-        <span class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-full mr-4 text-2xl">📱</span>
-        <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
-          PWA sin conexión
-        </h4>
-      </div>
-      <p class="text-gray-600">
-        Guarda la app en tu móvil y consulta recetas incluso sin internet.
-      </p>
+  <div class="group p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+    <div class="flex items-center mb-4">
+      <span class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-full mr-4 text-2xl">📱</span>
+      <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+        {% if LANGUAGE_CODE == 'es' %}PWA sin conexión{% else %}Offline PWA{% endif %}
+      </h4>
     </div>
-  {% endif %}
+    <p class="text-gray-600">
+      {% if LANGUAGE_CODE == 'es' %}Guarda la app en tu móvil y consulta recetas incluso sin internet.{% else %}Save the app on your phone and view recipes even offline.{% endif %}
+    </p>
+  </div>
 </section>
 {% endblock %}
