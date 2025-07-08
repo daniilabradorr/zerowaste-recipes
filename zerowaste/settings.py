@@ -121,7 +121,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 if not DEBUG:
     # En producción, servimos estáticos desde el Static Site en Render
-    STATIC_URL = "https://<tu-static-site>.onrender.com/"
+    STATIC_URL = "https://zerowaste-recipes-1.onrender.com/"
     # WhiteNoise sirve con compresión, sin manifest
     STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 else:
