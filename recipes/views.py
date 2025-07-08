@@ -9,13 +9,12 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
-
 from urllib.parse import quote
 
 from .models import Recipe, Ingredient, RecipeIngredient, Badge, BadgeAssignment, ShareEvent
 from .utils   import suggest_recipe
 
-from django.contrib import messages #Para el mensaje
+from django.contrib import messages  # Para el mensaje
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +33,7 @@ class IngredientFormView(LoginRequiredMixin, View):
     login_url           = "login"
     redirect_field_name = "next"
     template_name       = "recipes/ingredient_form.html"
+
     def get(self, request) -> HttpResponse:
         return render(request, self.template_name)
 
@@ -109,12 +109,13 @@ class SuggestView(LoginRequiredMixin, View):
 class TranslateView(LoginRequiredMixin, View):
     login_url           = "login"
     redirect_field_name = "next"
+
     def post(self, request, pk) -> HttpResponse:
         recipe = get_object_or_404(Recipe, pk=pk)
-        target = "en" if recipe.language=="es" else "es"
+        target = "en" if recipe.language == "es" else "es"
         prompt = (
             f"Traduce este título y pasos al "
-            f'{"inglés" if target=="en" else "español"}\n\n'
+            f'{"inglés" if target == "en" else "español"}\n\n'
             f'Título: "{recipe.title}"\nPasos:\n{recipe.instructions}'
         )
         try:
@@ -133,12 +134,10 @@ class TranslateView(LoginRequiredMixin, View):
             RecipeIngredient.objects.create(recipe=translated, ingredient=ri.ingredient, quantity=ri.quantity)
         return render(request, "recipes/_recipe_card.html", {"recipe": translated})
 
-
 class BadgeListView(LoginRequiredMixin, TemplateView):
     template_name = "recipes/badges.html"
 
     def get_context_data(self, **kwargs):
-        # Obtener el contexto base de TemplateView
         context = super().get_context_data(**kwargs)
         usuario = self.request.user
 
@@ -173,7 +172,6 @@ class BadgeListView(LoginRequiredMixin, TemplateView):
             insignia.unit_label = dict(Badge.METRIC_CHOICES)[insignia.metric]
             proximamente.append(insignia)
 
-        # Añadir al contexto las tres listas de insignias
         context.update({
             "owned_badges":     insignias_ganadas,
             "available_badges": disponibles,
@@ -181,11 +179,10 @@ class BadgeListView(LoginRequiredMixin, TemplateView):
         })
         return context
     
-    
 @login_required
 def share_app(request):
     """
-    Registra un ShareEvent, asigna badge 'Partner' cuando llegan a threshold,
+    Registra un ShareEvent, asigna badge 'Partner' cuando llego a 5 compartidos,
     y redirige al share URL (WhatsApp).
     """
     if not request.user.is_authenticated:
@@ -194,18 +191,19 @@ def share_app(request):
     via = request.GET.get("via", "")
     ShareEvent.objects.create(user=request.user, platform=via)
 
-    # ¿Partner?
+    # Cuento cuántas veces he compartido
     total_shares = ShareEvent.objects.filter(user=request.user).count()
     try:
         partner = Badge.objects.get(name__iexact="partner", active=True)
     except Badge.DoesNotExist:
         partner = None
 
+    # Solo asigno y muestro mensaje cuando alcanzo el umbral de 5 compartidos
     if partner and total_shares >= partner.threshold:
-        BadgeAssignment.objects.get_or_create(user=request.user, badge=partner)
-
-    if partner:
-        assigned, created = BadgeAssignment.objects.get_or_create(user=request.user, badge=partner)
+        assigned, created = BadgeAssignment.objects.get_or_create(
+            user=request.user,
+            badge=partner
+        )
         if created:
             messages.success(
                 request,
@@ -213,9 +211,8 @@ def share_app(request):
             )
 
     # redirijo a WhatsApp con mensaje
-    msg = quote(f"¡Mira ZeroWaste Recipes! {request.build_absolute_uri('/')}")
+    msg = quote(f"¡Mira ZeroWaste Recipes! {request.build_absolute_uri('/')}" )
     return redirect(f"https://api.whatsapp.com/send?text={msg}")
-
 
 class MissionView(TemplateView):
     """
