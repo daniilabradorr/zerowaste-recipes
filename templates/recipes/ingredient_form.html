@@ -4,13 +4,13 @@
 {# SEO: descripción y JSON-LD para la página de ingredientes #}
 {% block head_extra %}
   <meta name="description"
-        content="{% trans "Introduce tus ingredientes sobrantes y obtén recetas sostenibles generadas por IA mientras ves hojas caer en el fondo." %}">
+        content="{% trans "Introduce tus ingredientes sobrantes y obtén recetas IA mientras disfrutas de un fondo de hojas simbolizando sostenibilidad." %}">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "{% trans "Mis Ingredientes" %}",
-    "description": "{% trans "Ingresa tus ingredientes y recibe recetas IA con un fondo animado de hojas que simboliza sostenibilidad." %}"
+    "description": "{% trans "Ingresa los ingredientes que tengas y recibe recetas creativas generadas por IA con un fondo animado de hojas sostenible." %}"
   }
   </script>
 {% endblock %}
@@ -22,7 +22,8 @@
          role="region"
          aria-labelledby="ingredients-input-heading"
          class="relative overflow-hidden container mx-auto px-4 py-8">
-  {# Fondo de hojas cayendo #}
+
+  {# Fondo animado de hojas cayendo #}
   <div class="absolute inset-0 pointer-events-none animate-fall-leaves"
        style="
          background-image:
@@ -30,12 +31,12 @@
            url('{% static 'img/leaf2.png' %}'),
            url('{% static 'img/leaf3.png' %}');
          background-repeat: repeat;
-         background-size: 100px 100px;
-         opacity: 0.2;
+         background-size: 120px 120px;
+         opacity: 0.15;
        ">
   </div>
 
-  <div class="relative z-10">
+  <div class="relative z-10 bg-white bg-opacity-90 p-6 md:p-8 rounded-lg shadow-lg">
     <h1 id="ingredients-input-heading"
         class="text-2xl md:text-3xl font-serif text-primary mb-6">
       {% trans "Mis Ingredientes" %}
@@ -44,13 +45,12 @@
     <form hx-post="{% url 'recipes:suggest' %}"
           hx-target="#result"
           hx-swap="innerHTML"
-          class="space-y-4 bg-white bg-opacity-90 p-6 rounded-lg shadow-lg">
+          class="space-y-4">
       {% csrf_token %}
       <textarea name="ingredients"
                 rows="4"
                 placeholder="{% trans 'zanahoria, garbanzos, arroz…' %}"
-                class="w-full p-3 md:p-4 border rounded resize-none focus:outline-none focus:ring-2 focus:ring-primary">
-      </textarea>
+                class="w-full p-3 md:p-4 border rounded resize-none focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
       <button type="submit"
               class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-6 md:px-8 py-2 md:py-3 rounded-full transition">
         {% trans "Sugerir receta" %}
@@ -61,24 +61,18 @@
          class="mt-8"
          role="region"
          aria-live="polite">
-      <!-- Aquí se inyectan los resultados de la receta vía HTMX -->
+      <!-- Aquí se muestran los resultados generados por IA -->
     </div>
 
-    {# Próximamente: insignias grises y partner #}
+    {# Sección Próximamente en texto plano #}
     <section class="mt-12">
       <h2 class="text-xl font-semibold mb-4">{% trans "Próximamente" %}</h2>
-      <div class="flex flex-wrap gap-6">
-        {% for badge in coming_soon %}
-          <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-400 bg-gray-200 flex items-center justify-center opacity-50">
-            <img src="{% static 'img/badges/'|add:badge.name|add:'.png' %}"
-                 alt="{{ badge.name }}"
-                 class="max-w-full max-h-full object-contain">
-          </div>
-        {% endfor %}
-      </div>
-      <p class="mt-4 text-gray-700 text-sm">
-        {% trans "Visita próximamente nuestra tienda asociada para más recompensas:" %}
-        <strong>EcoMarket</strong> – {% trans "productos sostenibles con descuento para usuarios avanzados." %}
+      <p class="text-gray-700 text-sm md:text-base mb-2">
+        {% trans "Muy pronto activaremos un sistema de recompensas: según las insignias que obtengas y el CO₂ que evites al aprovechar tus ingredientes sobrantes," %}
+        <strong>{% trans "recibirás descuentos exclusivos en nuestra tienda asociada EcoMarket" %}</strong>.
+      </p>
+      <p class="text-gray-700 text-sm md:text-base">
+        {% trans "Cuanto más CO₂ ahorres y más insignias acumules, mayores serán tus descuentos en productos sostenibles." %}
       </p>
     </section>
   </div>
