@@ -4,22 +4,22 @@ services:
     env: python
     plan: free
 
-    # Instalamos dependencias y preparamos los estáticos
+    # Instalamos dependencias
     buildCommand: |
-        pip install -r requirements.txt
-        python manage.py collectstatic --noinput --clear
-        echo "=== CONTENTS OF staticfiles/ ==="
-        find staticfiles -type f
+      pip install -r requirements.txt
 
-    # Aplicamos migraciones antes de desplegar
-    preDeployCommand: python manage.py migrate --noinput
+    # Aplicamos migraciones antes de recoger estáticos
+    preDeployCommand: |
+      python manage.py migrate --noinput
+      python manage.py collectstatic --noinput --clear
 
-    # Arrancamos Gunicorn escuchando en el puerto que Render asigne
-    startCommand: gunicorn zerowaste.wsgi \
-                  --workers 3 \
-                  --bind 0.0.0.0:$PORT \
-                  --log-file -
+    # Arrancamos Gunicorn en el puerto asignado por Render
+    startCommand: |
+      gunicorn zerowaste.wsgi \
+        --workers 3 \
+        --bind 0.0.0.0:$PORT \
+        --log-file -
 
-    # Opcional: si quieres un health check
+    # Opcional: health check
     healthCheckPath: "/"
     healthCheckIntervalSeconds: 15
