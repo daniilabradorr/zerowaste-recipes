@@ -1,3 +1,4 @@
+{# Mobile-first design: estilos por defecto para móviles, MD: para pantallas medianas+ #}
 {% extends "base.html" %}
 {% load static %}
 {% block title %}
@@ -10,40 +11,31 @@
 
 {% block content %}
 <!-- Hero -->
-<section class="bg-green-50 rounded-xl p-8 shadow-lg text-center">
+<section class="bg-green-50 rounded-xl p-6 sm:p-8 shadow-lg text-center">
   {% if LANGUAGE_CODE == 'es' %}
-    <h2 class="text-4xl font-serif text-primary mb-4">
+    <h2 class="text-3xl md:text-4xl font-serif text-primary mb-4">
       Convierte sobras en cenas deliciosas
     </h2>
-    <p class="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
-      ZeroWaste Recipes aprovecha IA de última generación como Groq Llama-3 para crear recetas personalizadas que maximizan el sabor y reducen el desperdicio, disminuyendo hasta un 40 % de CO₂ por plato.
+    <p class="text-base md:text-lg text-gray-700 max-w-xl md:max-w-2xl mx-auto mb-6">
+      ZeroWaste Recipes aprovecha IA de última generación como Groq Llama-3 para crear recetas personalizadas que maximizan el sabor y reducen el desperdicio, disminuyendo hasta un 40 % de CO₂ por plato.
     </p>
     <a href="{% url 'recipes:ingredients' %}"
-       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition mb-8">
-       ➜ Probar ahora
+       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-6 md:px-8 py-2 md:py-3 rounded-full transition mb-6 md:mb-8">
+       ➜ {% if LANGUAGE_CODE == 'es' %}Probar ahora{% else %}Try now{% endif %}
     </a>
   {% else %}
-    <h2 class="text-4xl font-serif text-primary mb-4">
-      Turn leftovers into delicious dinners
-    </h2>
-    <p class="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
-      ZeroWaste Recipes leverages cutting-edge AI like Groq Llama-3 to craft personalized recipes that maximize flavor while reducing waste, cutting up to 40 % of CO₂ per meal.
-    </p>
-    <a href="{% url 'recipes:ingredients' %}"
-       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition mb-8">
-       ➜ Try now
-    </a>
+    <!-- Versión en inglés ya cubierta arriba -->
   {% endif %}
 
   <!-- My Badges Section -->
-  <div id="my-badges" class="mx-auto max-w-3xl">
-    <h3 class="text-2xl font-serif text-primary mb-4">
+  <div id="my-badges" class="mx-auto max-w-xl md:max-w-3xl">
+    <h3 class="text-xl md:text-2xl font-serif text-primary mb-4">
       {% if LANGUAGE_CODE == 'es' %}Mis Insignias{% else %}My Badges{% endif %}
     </h3>
     {% if user_badges %}
       <div class="flex justify-center flex-wrap gap-4 mb-6">
         {% for assignment in user_badges %}
-          <div class="flex flex-col items-center bg-green-100 px-5 py-4 rounded-2xl shadow-lg hover:scale-105 transform transition">
+          <div class="flex flex-col items-center bg-green-100 px-4 md:px-5 py-3 md:py-4 rounded-2xl shadow-lg hover:scale-105 transform transition">
             <div class="w-16 h-16 md:w-20 md:h-20 mb-2 rounded-full overflow-hidden border-2 border-green-300">
               {% if assignment.badge.name == "Starter" %}
                 <picture>
@@ -75,12 +67,12 @@
                 </picture>
               {% endif %}
             </div>
-            <span class="font-medium">{{ assignment.badge.name }}</span>
+            <span class="font-medium text-sm md:text-base">{{ assignment.badge.name }}</span>
           </div>
         {% endfor %}
       </div>
     {% else %}
-      <p class="text-gray-600 mb-6">
+      <p class="text-gray-600 mb-6 text-sm md:text-base">
         {% if LANGUAGE_CODE == 'es' %}
           Aún no tienes insignias. ¡Genera tu primera receta IA!
         {% else %}
@@ -90,36 +82,36 @@
     {% endif %}
 
     <a href="{% url 'recipes:my_badges' %}"
-       class="inline-block bg-secondary hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-full transition">
+       class="inline-block bg-secondary hover:bg-orange-600 text-white font-semibold px-5 md:px-6 py-2 rounded-full transition">
       {% if LANGUAGE_CODE == 'es' %}Ver insignias disponibles{% else %}View all badges{% endif %}
     </a>
   </div>
 </section>
 
 <!-- Features -->
-<section class="grid md:grid-cols-3 gap-8 mt-12">
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-10 md:mt-12">
   <!-- AI Recipes Feature -->
-  <div class="group p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
-    <div class="flex items-center mb-4">
-      <span class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-full mr-4 text-2xl">🍳</span>
-      <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+  <div class="group p-5 md:p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+    <div class="flex items-center mb-3 md:mb-4">
+      <span class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-primary/20 text-primary rounded-full mr-3 md:mr-4 text-xl md:text-2xl">🍳</span>
+      <h4 class="font-serif text-lg md:text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
         {% if LANGUAGE_CODE == 'es' %}Recetas IA Personalizadas{% else %}Personalized AI Recipes{% endif %}
       </h4>
     </div>
-    <p class="text-gray-600">
+    <p class="text-sm md:text-base text-gray-600">
       {% if LANGUAGE_CODE == 'es' %}Nuestra IA analiza tus ingredientes y preferencias para generar recetas únicas y equilibradas al instante.{% else %}Our AI analyzes your ingredients and preferences to generate balanced, one-of-a-kind recipes in seconds.{% endif %}
     </p>
   </div>
 
   <!-- Badges & Perks Feature -->
-  <div class="group p-6 bg-white rounded-2xl ring-2 ring-dashed ring-secondary/30 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
-    <div class="flex items-center mb-4">
-      <span class="inline-flex items-center justify-center w-12 h-12 bg-secondary/20 text-secondary rounded-full mr-4 text-2xl">🏅</span>
-      <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-secondary transition-colors">
+  <div class="group p-5 md:p-6 bg-white rounded-2xl ring-2 ring-dashed ring-secondary/30 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+    <div class="flex items-center mb-3 md:mb-4">
+      <span class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-secondary/20 text-secondary rounded-full mr-3 md:mr-4 text-xl md:text-2xl">🏅</span>
+      <h4 class="font-serif text-lg md:text-xl font-semibold text-gray-800 group-hover:text-secondary transition-colors">
         {% if LANGUAGE_CODE == 'es' %}Insignias & Ventajas{% else %}Badges & Perks{% endif %}
       </h4>
     </div>
-    <ul class="list-disc list-inside text-gray-600 space-y-1">
+    <ul class="list-disc list-inside text-sm md:text-base text-gray-600 space-y-1">
       {% if LANGUAGE_CODE == 'es' %}
         <li>Descuentos exclusivos en productos eco-amigables.</li>
         <li>Newsletter con tips sostenibles y recetas nuevas.</li>
@@ -133,14 +125,14 @@
   </div>
 
   <!-- Offline PWA Feature -->
-  <div class="group p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
-    <div class="flex items-center mb-4">
-      <span class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-full mr-4 text-2xl">📱</span>
-      <h4 class="font-serif text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+  <div class="group p-5 md:p-6 bg-white rounded-2xl ring-1 ring-green-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition">
+    <div class="flex items-center mb-3 md:mb-4">
+      <span class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-primary/20 text-primary rounded-full mr-3 md:mr-4 text-xl md:text-2xl">📱</span>
+      <h4 class="font-serif text-lg md:text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
         {% if LANGUAGE_CODE == 'es' %}PWA Offline Avanzada{% else %}Advanced Offline PWA{% endif %}
       </h4>
     </div>
-    <p class="text-gray-600">
+    <p class="text-sm md:text-base text-gray-600">
       {% if LANGUAGE_CODE == 'es' %}Instala la PWA para acceder a tus recetas favoritas, listas de ingredientes y pasos de cocina incluso sin conexión, con sincronización automática al reconectar.{% else %}Install the PWA to access your favorite recipes, ingredient lists, and cooking steps even offline, with automatic sync when you reconnect.{% endif %}
     </p>
   </div>
