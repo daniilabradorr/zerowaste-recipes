@@ -1,16 +1,15 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
-{# SEO: mejoro descripción y añado JSON-LD para buscadores #}
+{# SEO: descripción mejorada y JSON-LD para buscadores #}
 {% block head_extra %}
-  <meta name="description"
-        content="{% trans "Gestiona tus insignias: las ganadas, disponibles y próximas, y descubre cómo subir de nivel con ZeroWaste Recipes." %}">
+  <meta name="description" content="{% trans "Gestiona tus insignias: ganadas, disponibles y próximas. Incrementa tu impacto sostenible." %}">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "{% trans "Mis Insignias" %}",
-    "description": "{% trans "Página para ver tus insignias ganadas, explorar nuevas y conocer las próximas recompensas." %}"
+    "description": "{% trans "Explora las insignias que has ganado, descubre nuevas y mira las próximas recompensas en ZeroWaste Recipes." %}"
   }
   </script>
 {% endblock %}
@@ -18,129 +17,94 @@
 {% block title %}{% trans "Mis Insignias" %}{% endblock %}
 
 {% block content %}
-<section id="badges-overview"
-         role="region"
-         aria-labelledby="badges-overview-heading"
-         class="container mx-auto px-4 py-6">
-  <h1 id="badges-overview-heading" class="text-2xl md:text-3xl font-serif text-primary mb-6">
-    {% trans "Mis Insignias" %}
-  </h1>
+<section id="badges-overview" role="region" aria-labelledby="badges-overview-heading" class="container mx-auto px-4 py-6">
+  <h1 id="badges-overview-heading" class="text-2xl md:text-3xl font-serif text-primary mb-6">{% trans "Mis Insignias" %}</h1>
 
-  {# — Insignias Ganadas — #}
-  <div class="mb-10" role="region" aria-labelledby="owned-badges-heading">
-    <h2 id="owned-badges-heading" class="text-xl md:text-2xl font-semibold mb-4">
-      {% trans "Tus Insignias" %}
-    </h2>
+  <!-- Insignias Ganadas -->
+  <div role="region" aria-labelledby="owned-badges-heading" class="mb-10">
+    <h2 id="owned-badges-heading" class="text-xl md:text-2xl font-semibold mb-4">{% trans "Tus Insignias" %}</h2>
     {% if owned_badges %}
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {% for badge in owned_badges %}
-          <article class="bg-green-50 p-4 md:p-6 rounded-lg shadow-lg flex flex-col items-center text-center"
-                   role="article">
-            <div class="w-24 h-24 md:w-28 md:h-28 mb-3 rounded-full overflow-hidden border-4 border-green-500 shadow-md">
+          <article class="bg-green-50 p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
+            <div class="w-28 h-28 mb-4 rounded-full overflow-hidden border-4 border-green-500 shadow-md">
               <picture>
                 <source srcset="{% static 'img/badges/'|add:badge.name|add:'.webp' %}" type="image/webp">
                 <img src="{% static 'img/badges/'|add:badge.name|add:'.png' %}"
-                     alt="{% trans "Insignia " %}{{ badge.name }}{% trans " obtenida" %}"
+                     alt="{% trans "Insignia" %} {{ badge.name }} {% trans "obtenida" %}"
                      width="112" height="112"
-                     loading="lazy"
-                     decoding="async"
-                     class="object-contain">
+                     loading="lazy" decoding="async"
+                     class="max-w-full max-h-full object-contain">
               </picture>
             </div>
-            <h3 class="font-bold text-lg md:text-xl mb-1">{{ badge.name }}</h3>
-            <p class="text-sm md:text-base text-gray-700 mb-2">{{ badge.description|safe }}</p>
-            <div class="text-xs md:text-sm text-gray-500 mb-1">
-              <strong>{% trans "Objetivo:" %}</strong> {{ badge.threshold }} {{ badge.unit_label }}
-            </div>
-            <div class="text-xs md:text-sm text-green-600 font-medium">
-              <strong>{% trans "Progreso:" %}</strong> {{ badge.progress }} / {{ badge.threshold }} {{ badge.unit_label }}
-            </div>
+            <h3 class="font-bold text-lg mb-1">{{ badge.name }}</h3>
+            <p class="text-sm text-gray-700 mb-2">{{ badge.description|safe }}</p>
+            <p class="text-xs text-gray-500 mb-1"><strong>{% trans "Objetivo:" %}</strong> {{ badge.threshold }} {{ badge.unit_label }}</p>
+            <p class="text-xs text-green-600 font-medium"><strong>{% trans "Progreso:" %}</strong> {{ badge.progress }} / {{ badge.threshold }} {{ badge.unit_label }}</p>
           </article>
         {% endfor %}
       </div>
     {% else %}
-      <p class="text-gray-600 text-sm md:text-base">
-        {% trans "Aún no has ganado ninguna insignia." %}
-      </p>
+      <p class="text-gray-600 text-sm md:text-base">{% trans "Aún no has ganado ninguna insignia." %}</p>
     {% endif %}
   </div>
 
-  {# — Insignias Disponibles — #}
-  <div class="mb-10" role="region" aria-labelledby="available-badges-heading">
-    <h2 id="available-badges-heading" class="text-xl md:text-2xl font-semibold mb-4">
-      {% trans "Disponibles para ti" %}
-    </h2>
+  <!-- Insignias Disponibles -->
+  <div role="region" aria-labelledby="available-badges-heading" class="mb-10">
+    <h2 id="available-badges-heading" class="text-xl md:text-2xl font-semibold mb-4">{% trans "Disponibles para ti" %}</h2>
     {% if available_badges %}
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {% for badge in available_badges %}
-          <article class="bg-white p-4 md:p-6 rounded-lg shadow hover:shadow-lg transition flex flex-col items-center text-center"
-                   role="article">
-            <div class="w-24 h-24 md:w-28 md:h-28 mb-3 rounded-full overflow-hidden border-4 border-gray-300 shadow-md">
+          <article class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition flex flex-col items-center text-center">
+            <div class="w-28 h-28 mb-4 rounded-full overflow-hidden border-4 border-gray-300 shadow-md">
               <picture>
                 <source srcset="{% static 'img/badges/'|add:badge.name|add:'.webp' %}" type="image/webp">
                 <img src="{% static 'img/badges/'|add:badge.name|add:'.png' %}"
-                     alt="{% trans "Insignia " %}{{ badge.name }}{% trans " disponible" %}"
+                     alt="{% trans "Insignia" %} {{ badge.name }} {% trans "disponible" %}"
                      width="112" height="112"
-                     loading="lazy"
-                     decoding="async"
-                     class="object-contain opacity-80">
+                     loading="lazy" decoding="async"
+                     class="max-w-full max-h-full object-contain opacity-80">
               </picture>
             </div>
-            <h3 class="font-bold text-lg md:text-xl mb-1">{{ badge.name }}</h3>
-            <p class="text-sm md:text-base text-gray-700 mb-2">{{ badge.description|safe }}</p>
-            <div class="text-xs md:text-sm text-gray-500 mb-1">
-              <strong>{% trans "Objetivo:" %}</strong> {{ badge.threshold }} {{ badge.unit_label }}
-            </div>
-            <div class="text-xs md:text-sm text-blue-600 font-medium">
-              <strong>{% trans "Progreso:" %}</strong> {{ badge.progress }} / {{ badge.threshold }} {{ badge.unit_label }}
-            </div>
+            <h3 class="font-bold text-lg mb-1">{{ badge.name }}</h3>
+            <p class="text-sm text-gray-700 mb-2">{{ badge.description|safe }}</p>
+            <p class="text-xs text-gray-500 mb-1"><strong>{% trans "Objetivo:" %}</strong> {{ badge.threshold }} {{ badge.unit_label }}</p>
+            <p class="text-xs text-blue-600 font-medium"><strong>{% trans "Progreso:" %}</strong> {{ badge.progress }} / {{ badge.threshold }} {{ badge.unit_label }}</p>
           </article>
         {% endfor %}
       </div>
     {% else %}
-      <p class="text-gray-600 text-sm md:text-base">
-        {% trans "No hay insignias nuevas disponibles." %}
-      </p>
+      <p class="text-gray-600 text-sm md:text-base">{% trans "No hay insignias nuevas disponibles." %}</p>
     {% endif %}
   </div>
 
-  {# — Próximamente — #}
+  <!-- Próximamente -->
   <div role="region" aria-labelledby="coming-soon-heading">
-    <h2 id="coming-soon-heading" class="text-xl md:text-2xl font-semibold mb-4">
-      {% trans "Próximamente" %}
-    </h2>
+    <h2 id="coming-soon-heading" class="text-xl md:text-2xl font-semibold mb-4">{% trans "Próximamente" %}</h2>
     {% if coming_soon %}
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {% for badge in coming_soon %}
-          <article class="bg-gray-100 p-4 md:p-6 rounded-lg flex flex-col items-center text-center"
-                   role="article">
-            <div class="w-24 h-24 md:w-28 md:h-28 mb-3 rounded-full overflow-hidden border-4 border-gray-400 shadow-sm">
+          <article class="bg-gray-100 p-6 rounded-lg flex flex-col items-center text-center">
+            <div class="w-28 h-28 mb-4 rounded-full overflow-hidden border-4 border-gray-400 shadow-sm">
               <picture>
                 <source srcset="{% static 'img/badges/'|add:badge.name|add:'.webp' %}" type="image/webp">
                 <img src="{% static 'img/badges/'|add:badge.name|add:'.png' %}"
-                     alt="{% trans "Insignia " %}{{ badge.name }}{% trans " próximamente" %}"
+                     alt="{% trans "Insignia" %} {{ badge.name }} {% trans "próximamente" %}"
                      width="112" height="112"
-                     loading="lazy"
-                     decoding="async"
-                     class="object-contain opacity-50">
+                     loading="lazy" decoding="async"
+                     class="max-w-full max-h-full object-contain opacity-50">
               </picture>
             </div>
-            <h3 class="font-bold text-lg md:text-xl text-gray-500 mb-1">{{ badge.name }}</h3>
-            <p class="text-sm md:text-base text-gray-500 mb-2">{{ badge.description|safe }}</p>
-            <div class="text-xs md:text-sm text-gray-500 mb-1">
-              <strong>{% trans "Objetivo:" %}</strong> {{ badge.threshold }} {{ badge.unit_label }}
-            </div>
-            <div class="text-xs md:text-sm text-gray-500 font-medium">
-              <strong>{% trans "Progreso:" %}</strong> {{ badge.progress }} / {{ badge.threshold }} {{ badge.unit_label }}
-            </div>
+            <h3 class="font-bold text-lg text-gray-500 mb-1">{{ badge.name }}</h3>
+            <p class="text-sm text-gray-500 mb-2">{{ badge.description|safe }}</p>
+            <p class="text-xs text-gray-500 mb-1"><strong>{% trans "Objetivo:" %}</strong> {{ badge.threshold }} {{ badge.unit_label }}</p>
+            <p class="text-xs text-gray-500 font-medium"><strong>{% trans "Progreso:" %}</strong> {{ badge.progress }} / {{ badge.threshold }} {{ badge.unit_label }}</p>
             <p class="text-xs text-gray-400 mt-1">{% trans "Próximamente" %}</p>
           </article>
         {% endfor %}
       </div>
     {% else %}
-      <p class="text-gray-600 text-sm md:text-base">
-        {% trans "No hay insignias próximamente." %}
-      </p>
+      <p class="text-gray-600 text-sm md:text-base">{% trans "No hay insignias próximamente." %}</p>
     {% endif %}
   </div>
 </section>
