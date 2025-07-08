@@ -133,7 +133,12 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
+if not DEBUG:
+    # Apunta al dominio de tu Static Site en Render:
+    STATIC_URL = "https://zerowaste-recipes-1.onrender.com/"
+else:
+    # Para desarrollo local
+    STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 #Para producción en render usare collectstatic
