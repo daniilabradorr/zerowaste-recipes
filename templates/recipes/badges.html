@@ -3,13 +3,13 @@
 
 {# SEO: descripción enriquecida y JSON-LD para buscadores #}
 {% block head_extra %}
-  <meta name="description" content="{% trans "Gestiona tus insignias: ganadas, disponibles y próximas. Incrementa tu impacto sostenible." %}">
+  <meta name="description" content="{% trans 'Gestiona tus insignias: ganadas, disponibles y próximas. Incrementa tu impacto sostenible.' %}">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "{% trans "Mis Insignias" %}",
-    "description": "{% trans "Explora las insignias que has ganado, descubre nuevas y mira las próximas recompensas en ZeroWaste Recipes." %}"
+    "name": "{% trans 'Mis Insignias' %}",
+    "description": "{% trans 'Explora las insignias que has ganado, descubre nuevas y mira las próximas recompensas en ZeroWaste Recipes.' %}"
   }
   </script>
 {% endblock %}
@@ -31,8 +31,8 @@
               <picture>
                 <source srcset="{% static 'img/badges/'|add:badge.name|add:'.webp' %}" type="image/webp">
                 <img src="{% static 'img/badges/'|add:badge.name|add:'.png' %}"
-                     alt="{% trans "Insignia" %} {{ badge.name }} {% trans "obtenida" %}"
-                     width="160" height="160"
+                     alt="{% trans 'Insignia' %} {{ badge.name }} {% trans 'obtenida' %}"
+                     width="158" height="158"
                      loading="lazy" decoding="async"
                      class="w-full h-full object-contain">
               </picture>
@@ -60,8 +60,8 @@
               <picture>
                 <source srcset="{% static 'img/badges/'|add:badge.name|add:'.webp' %}" type="image/webp">
                 <img src="{% static 'img/badges/'|add:badge.name|add:'.png' %}"
-                     alt="{% trans "Insignia" %} {{ badge.name }} {% trans "disponible" %}"
-                     width="160" height="160"
+                     alt="{% trans 'Insignia' %} {{ badge.name }} {% trans 'disponible' %}"
+                     width="158" height="158"
                      loading="lazy" decoding="async"
                      class="w-full h-full object-contain opacity-80">
               </picture>
@@ -89,8 +89,8 @@
               <picture>
                 <source srcset="{% static 'img/badges/'|add:badge.name|add:'.webp' %}" type="image/webp">
                 <img src="{% static 'img/badges/'|add:badge.name|add:'.png' %}"
-                     alt="{% trans "Insignia" %} {{ badge.name }} {% trans "próximamente" %}"
-                     width="160" height="160"
+                     alt="{% trans 'Insignia' %} {{ badge.name }} {% trans 'próximamente' %}"
+                     width="158" height="158"
                      loading="lazy" decoding="async"
                      class="w-full h-full object-contain opacity-50">
               </picture>
