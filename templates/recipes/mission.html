@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
+{# SEO: agrego meta description y JSON-LD para buscadores #}
 {% block head_extra %}
-  <meta name="description" content="{% if LANGUAGE_CODE == 'es' %}Conoce la misión de ZeroWaste Recipes: reducir desperdicio y CO₂ mediante IA y comunidad sostenible.{% else %}Learn ZeroWaste Recipes’ mission: cutting waste and CO₂ through AI-powered sustainable cooking community.{% endif %}">
+  <meta name="description"
+        content="{% if LANGUAGE_CODE == 'es' %}Conoce mi misión en ZeroWaste Recipes: reducir desperdicio y CO₂ mediante IA y comunidad sostenible.{% else %}Learn my mission at ZeroWaste Recipes: cutting waste and CO₂ through an AI-powered sustainable cooking community.{% endif %}">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "{% trans "Misión" %}",
-    "description": "{% trans "La misión de ZeroWaste Recipes: transformar sobras en platos sostenibles usando IA." %}"
+    "description": "{% trans "Mi misión en ZeroWaste Recipes: transformar sobras en platos sostenibles usando IA." %}"
   }
   </script>
 {% endblock %}
@@ -23,57 +25,116 @@
 
 {% block content %}
 <!-- Hero Misión -->
-<section id="mission-hero" role="region" aria-labelledby="mission-hero-heading" class="bg-green-50 rounded-xl overflow-hidden shadow-md">
-  <picture>
-    <source srcset="{% static 'img/mission-hero.webp' %}" type="image/webp">
-    <img src="{% static 'img/mission-hero.png' %}" alt="{% trans "Ilustración de misión sostenible" %}" loading="lazy" decoding="async" width="1920" height="400" class="w-full h-48 md:h-64 object-cover">
-  </picture>
-  <div class="p-6 md:p-8 text-center">
-    <h1 id="mission-hero-heading" class="text-3xl md:text-4xl font-serif text-primary mb-4">
-      {% if LANGUAGE_CODE == 'es' %}Nuestra Misión{% else %}Our Mission{% endif %}
-    </h1>
-    <p class="text-base md:text-lg text-gray-700 max-w-xl mx-auto">
+<section class="bg-green-50 rounded-xl overflow-hidden shadow-md">
+  <img src="{% static 'img/mission-hero.png' %}" 
+       alt="{% trans 'Nuestra misión' %}" 
+       class="w-full h-48 object-cover md:h-64">
+  <div class="p-6 text-center">
+    <h2 class="text-3xl font-serif text-primary mb-4">
       {% if LANGUAGE_CODE == 'es' %}
-        En ZeroWaste Recipes creemos que cada ingrediente cuenta. Transformamos tus sobras en recetas deliciosas, reducimos el desperdicio y la huella de CO₂, y empoderamos a nuestra comunidad para cocinar de forma más sostenible.
+        Nuestra Misión
       {% else %}
-        At ZeroWaste Recipes we believe every ingredient matters. We turn your leftovers into delightful recipes, cut waste and CO₂ emissions, and empower our community to cook more sustainably.
+        Our Mission
+      {% endif %}
+    </h2>
+    <p class="max-w-xl mx-auto text-gray-700">
+      {% if LANGUAGE_CODE == 'es' %}
+        En ZeroWaste Recipes creemos que cada ingrediente cuenta. Transformamos tus sobras en recetas deliciosas,
+        reducimos el desperdicio y la huella de CO₂, y empoderamos a nuestra comunidad para cocinar de forma
+        más sostenible.
+      {% else %}
+        At ZeroWaste Recipes we believe every ingredient matters. We turn your leftovers into delightful recipes,
+        cut waste and CO₂ emissions, and empower our community to cook more sustainably.
       {% endif %}
     </p>
   </div>
 </section>
 
 <!-- Cómo Funciona -->
-<section id="how-it-works" role="region" aria-labelledby="how-it-works-heading" class="mt-10 px-4 md:px-8">
-  <h2 id="how-it-works-heading" class="text-2xl md:text-3xl font-serif text-primary mb-6 text-center">
+<section class="mt-10">
+  <h3 class="text-2xl font-serif text-primary mb-4 text-center">
     {% if LANGUAGE_CODE == 'es' %}¿Cómo Funciona?{% else %}How It Works{% endif %}
-  </h2>
+  </h3>
   <div class="space-y-6 md:space-y-0 md:grid md:grid-cols-3 md:gap-6">
-    {% for step in steps %}
-      <article class="p-4 bg-white rounded-lg shadow-sm flex flex-col items-center text-center" role="article">
-        <h3 class="font-semibold mb-2 text-lg md:text-xl">{{ step.number }}. {{ step.title }}</h3>
-        <p class="text-gray-600 text-sm md:text-base">{{ step.description }}</p>
-      </article>
-    {% endfor %}
+    <div class="p-4 bg-white rounded-lg shadow-sm">
+      <h4 class="font-semibold mb-2">1. Añade tus sobras</h4>
+      <p class="text-gray-600">
+        {% if LANGUAGE_CODE == 'es' %}
+          Escribe los ingredientes que tienes en tu nevera.
+        {% else %}
+          List the ingredients you have in your fridge.
+        {% endif %}
+      </p>
+    </div>
+    <div class="p-4 bg-white rounded-lg shadow-sm">
+      <h4 class="font-semibold mb-2">2. IA genera receta</h4>
+      <p class="text-gray-600">
+        {% if LANGUAGE_CODE == 'es' %}
+          Nuestra IA crea una receta optimizada para ti.
+        {% else %}
+          Our AI crafts a recipe optimized just for you.
+        {% endif %}
+      </p>
+    </div>
+    <div class="p-4 bg-white rounded-lg shadow-sm">
+      <h4 class="font-semibold mb-2">3. Cocina y ahorra</h4>
+      <p class="text-gray-600">
+        {% if LANGUAGE_CODE == 'es' %}
+          Minimiza el desperdicio y disfruta de platos deliciosos.
+        {% else %}
+          Minimize waste and enjoy delicious meals.
+        {% endif %}
+      </p>
+    </div>
   </div>
 </section>
 
 <!-- Beneficios -->
-<section id="mission-benefits" role="region" aria-labelledby="benefits-heading" class="mt-10 bg-white rounded-lg shadow-md p-6 md:p-8">
-  <h2 id="benefits-heading" class="text-2xl md:text-3xl font-serif text-primary mb-4 text-center">
+<section class="mt-10 bg-white rounded-lg shadow-md p-6">
+  <h3 class="text-2xl font-serif text-primary mb-4 text-center">
     {% if LANGUAGE_CODE == 'es' %}Beneficios{% else %}Benefits{% endif %}
-  </h2>
-  <ul class="list-disc list-inside space-y-2 text-gray-700 text-sm md:text-base">
-    {% for benefit in benefits %}
-      <li>{{ benefit }}</li>
-    {% endfor %}
+  </h3>
+  <ul class="list-disc list-inside space-y-2 text-gray-700">
+    <li>
+      {% if LANGUAGE_CODE == 'es' %}
+        Reduce tu huella de CO₂ cada vez que cocinas con sobras.
+      {% else %}
+        Reduce your CO₂ footprint each time you cook with leftovers.
+      {% endif %}
+    </li>
+    <li>
+      {% if LANGUAGE_CODE == 'es' %}
+        Descubre nuevas recetas creativas e internacionales.
+      {% else %}
+        Discover new and creative international recipes.
+      {% endif %}
+    </li>
+    <li>
+      {% if LANGUAGE_CODE == 'es' %}
+        Gana insignias y descuentos exclusivos en tiendas eco.
+      {% else %}
+        Earn badges and exclusive discounts at eco-friendly stores.
+      {% endif %}
+    </li>
+    <li>
+      {% if LANGUAGE_CODE == 'es' %}
+        Forma parte de una comunidad comprometida con el planeta.
+      {% else %}
+        Join a community committed to the planet.
+      {% endif %}
+    </li>
   </ul>
 </section>
 
 <!-- Llamado a la acción -->
-<section id="mission-cta" role="region" class="mt-12 text-center px-4">
+<section class="mt-12 text-center">
   <a href="{% url 'recipes:ingredients' %}"
-     class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-6 md:px-8 py-2 md:py-3 rounded-full transition">
-    {% if LANGUAGE_CODE == 'es' %}¡Empieza Ahora!{% else %}Get Started!{% endif %}
+     class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition">
+    {% if LANGUAGE_CODE == 'es' %}
+      ¡Empieza Ahora!
+    {% else %}
+      Get Started!
+    {% endif %}
   </a>
 </section>
 {% endblock %}
