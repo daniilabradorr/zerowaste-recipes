@@ -4,23 +4,25 @@ services:
     env: python
     plan: free
 
-    # Instalamos dependencias
+    # ---------- BUILD ----------
+    # 1) Instala dependencias
+    # 2) Ejecuta collectstatic durante el build
     buildCommand: |
-      cd zerowaste-recipes 
       pip install -r requirements.txt
-      python manage.py collectstatic --noinput --clear --verbosity 2 || exit 1 
+      python manage.py collectstatic --noinput --clear --verbosity 2 || exit 1
 
-    # Aplicamos migraciones antes de recoger estáticos
+    # ---------- PRE-DEPLOY ----------
+    # Sólo migraciones (los estáticos ya se recogieron arriba)
     preDeployCommand: |
       python manage.py migrate --noinput
 
-    # Arrancamos Gunicorn en el puerto asignado por Render
+    # ---------- START ----------
     startCommand: |
       gunicorn zerowaste.wsgi \
         --workers 3 \
         --bind 0.0.0.0:$PORT \
         --log-file -
 
-    # Opcional: health check
+    # Opcional: health-check sencillo
     healthCheckPath: "/"
     healthCheckIntervalSeconds: 15
