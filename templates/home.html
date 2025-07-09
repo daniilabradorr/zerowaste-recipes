@@ -37,7 +37,16 @@
        ➜ {% if LANGUAGE_CODE == 'es' %}Probar ahora{% else %}Try now{% endif %}
     </a>
   {% else %}
-    <!-- Versión en inglés ya cubierta arriba -->
+    <h2 class="text-3xl md:text-4xl font-serif text-primary mb-4">
+      Turn leftovers into delicious dinners
+    </h2>
+    <p class="text-base md:text-lg text-gray-700 max-w-xl md:max-w-2xl mx-auto mb-6">
+      ZeroWaste Recipes leverages cutting-edge AI like Groq Llama-3 to craft personalized recipes that maximize flavor and minimize waste, cutting up to 40% of CO₂ per meal.
+    </p>
+    <a href="{% url 'recipes:ingredients' %}"
+       class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-6 md:px-8 py-2 md:py-3 rounded-full transition mb-6 md:mb-8">
+       ➜ Try now
+    </a>
   {% endif %}
 
   <!-- My Badges Section -->
@@ -48,39 +57,24 @@
     {% if user_badges %}
       <div class="flex justify-center flex-wrap gap-4 mb-6">
         {% for assignment in user_badges %}
-          <div class="flex flex-col items-center bg-green-100 px-4 md:px-5 py-3 md:py-4 rounded-2xl shadow-lg hover:scale-105 transform transition">
-            <div class="w-16 h-16 md:w-20 md:h-20 mb-2 rounded-full overflow-hidden border-2 border-green-300">
-              {% if assignment.badge.name == "Starter" %}
-                <picture> 
-                  <source srcset="{% static 'img/badges/Starter.webp' %}" type="image/webp">
-                  <img src="{% static 'img/badges/Starter.png' %}" alt="Starter badge"
-                       width="80" height="80" loading="lazy" decoding="async"
-                       class="w-full h-full object-contain">
-                </picture>
-              {% elif assignment.badge.name == "Partner" %}
-                <picture>
-                  <source srcset="{% static 'img/badges/Partner.webp' %}" type="image/webp">
-                  <img src="{% static 'img/badges/Partner.png' %}" alt="Partner badge"
-                       width="80" height="80" loading="lazy" decoding="async"
-                       class="w-full h-full object-contain">
-                </picture>
-              {% elif assignment.badge.name == "Co2-Helper" %}
-                <picture>
-                  <source srcset="{% static 'img/badges/CO2Helper.webp' %}" type="image/webp">
-                  <img src="{% static 'img/badges/CO2Helper.png' %}" alt="Co2-Helper badge"
-                       width="80" height="80" loading="lazy" decoding="async"
-                       class="w-full h-full object-contain">
-                </picture>
-              {% elif assignment.badge.name == "Eco-Veteran" %}
-                <picture>
-                  <source srcset="{% static 'img/badges/EcoVeteran.webp' %}" type="image/webp">
-                  <img src="{% static 'img/badges/EcoVeteran.png' %}" alt="Eco-Veteran badge"
-                       width="80" height="80" loading="lazy" decoding="async"
-                       class="w-full h-full object-contain">
-                </picture>
-              {% endif %}
+          <div class="flex flex-col items-center bg-green-100 px-4 md:px-5 py-3 md:py-4
+                      rounded-2xl shadow-lg hover:scale-105 transform transition">
+            <div class="w-16 h-16 md:w-20 md:h-20 mb-2 rounded-full overflow-hidden
+                        border-2 border-green-300">
+              <picture>
+                {# WEBP primero #}
+                <source srcset="{% static 'img/badges/'|add:assignment.badge.name|add:'.webp' %}"
+                        type="image/webp">
+                {# PNG de respaldo #}
+                <img src="{% static 'img/badges/'|add:assignment.badge.name|add:'.png' %}"
+                    alt="{{ assignment.badge.name }} badge"
+                    width="80" height="80" loading="lazy" decoding="async"
+                    class="w-full h-full object-contain">
+              </picture>
             </div>
-            <span class="font-medium text-sm md:text-base">{{ assignment.badge.name }}</span>
+            <span class="font-medium text-sm md:text-base">
+              {{ assignment.badge.name }}
+            </span>
           </div>
         {% endfor %}
       </div>

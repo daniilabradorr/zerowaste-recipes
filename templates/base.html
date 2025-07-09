@@ -74,8 +74,14 @@
 
   {# HTMX #}
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+  {# Para cargar CSS adicional #}
+  {% block extra_css %}{% endblock %}
+
 </head>
 <body class="font-sans bg-gray-50 text-gray-800">
+  {# BLOQUE PARA JS EXTRA DE PLANTILLAS HIJAS #}
+  {% block extra_js %}{% endblock %}
 
   <!-- Header -->
   <header class="bg-white shadow-md px-4 py-3 flex flex-wrap items-center gap-4">

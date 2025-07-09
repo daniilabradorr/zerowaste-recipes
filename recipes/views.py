@@ -219,3 +219,123 @@ class MissionView(TemplateView):
     Muestro la página 'Nuestra Misión' con texto adaptado a ES/EN
     """
     template_name = "recipes/mission.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+
+        # Objetivos genéricos
+        ctx['objectives'] = [
+            {'icon': '🌱', 'text_es': 'Evitar desperdicio doméstico', 'text_en': 'Avoid household waste'},
+            {'icon': '⚡️', 'text_es': 'Medir recorte de CO₂',     'text_en': 'Measure CO₂ reduction'},
+            {'icon': '🏆', 'text_es': 'Gamificar sostenibilidad', 'text_en': 'Gamify sustainability'},
+            {'icon': '🤝', 'text_es': 'Construir comunidad',       'text_en': 'Build community'},
+        ]
+
+        # Pasos de "How It Works"
+        ctx['how_it_works'] = [
+            {
+                'step': 1,
+                'title_es': 'Añade tus sobras',
+                'desc_es': 'Escanea o escribe los ingredientes que te quedan.',
+                'title_en': 'Add your leftovers',
+                'desc_en': 'Scan or type the ingredients you have left.'
+            },
+            {
+                'step': 2,
+                'title_es': 'IA crea tu receta',
+                'desc_es': 'Nuestro modelo Llama-3 genera platos deliciosos y sostenibles.',
+                'title_en': 'AI creates your recipe',
+                'desc_en': 'Our Llama-3 model crafts tasty, sustainable dishes.'
+            },
+            {
+                'step': 3,
+                'title_es': 'Cocina y comparte',
+                'desc_es': 'Muestra tu ahorro de CO₂ y gana insignias.',
+                'title_en': 'Cook & share',
+                'desc_en': 'Show your CO₂ savings and earn badges.'
+            },
+        ]
+
+        # Beneficios
+        ctx['benefits'] = [
+            {
+                'icon': 'no-waste.svg',
+                'title_es': 'Reduce desperdicio',
+                'desc_es': 'Da una segunda vida a cada alimento.',
+                'title_en': 'Reduce waste',
+                'desc_en': 'Give every scrap a second life.'
+            },
+            {
+                'icon': 'co2.svg',
+                'title_es': 'Recorta CO₂',
+                'desc_es': 'Mide el impacto positivo de cada plato.',
+                'title_en': 'Cut CO₂',
+                'desc_en': 'Track the positive impact of each dish.'
+            },
+            {
+                'icon': 'creativity.svg',
+                'title_es': 'Creatividad al instante',
+                'desc_es': 'Ideas sabrosas basadas en lo que ya tienes.',
+                'title_en': 'Instant creativity',
+                'desc_en': 'Delicious ideas using what you already have.'
+            },
+            {
+                'icon': 'community.svg',
+                'title_es': 'Comunidad',
+                'desc_es': 'Comparte logros y reta a tus amigos.',
+                'title_en': 'Community',
+                'desc_en': 'Share achievements and challenge friends.'
+            },
+        ]
+
+        # Testimonios
+        ctx['testimonials'] = [
+            {
+                'img': 'user1.webp',
+                'name': 'Laura',
+                'quote_es': '“Ahora ahorro 30 € al mes y mi cubo de basura está casi vacío.”',
+                'quote_en': '“I now save €30/month and my trash is almost empty.”'
+            },
+            {
+                'img': 'user2.webp',
+                'name': 'Carlos',
+                'quote_es': '“Las insignias me pican: ¡no he fallado ni un reto semanal!”',
+                'quote_en': '“The badges keep me going—I’ve never missed a weekly challenge!”'
+            },
+            {
+                'img': 'user3.webp',
+                'name': 'Aya',
+                'quote_es': '“La IA clava mi dieta vegana con lo que hay en mi nevera.”',
+                'quote_en': '“The AI nails my vegan diet with what’s in my fridge.”'
+            },
+        ]
+
+        # FAQs
+        ctx['faqs'] = [
+            {
+                'question_es': '¿Es gratis la app?',
+                'answer_es': 'Sí, la funcionalidad básica…',
+                'question_en': 'Is the app free?',
+                'answer_en': 'Yes, the core recipe & CO₂ calculator is completely free.'
+            },
+            {
+                'question_es': '¿Cómo calcula ZeroWaste Recipes el CO₂ evitado?',
+                'answer_es': 'Usamos factores de emisión…',
+                'question_en': 'How do you calculate CO₂ saved?',
+                'answer_en': 'We use FAO emission factors & peer-reviewed studies.'
+            },
+            {
+                'question_es': '¿Necesito conexión a internet?',
+                'answer_es': 'La app es PWA: genera recetas sin conexión…',
+                'question_en': 'Do I need internet?',
+                'answer_en': 'The PWA works offline & syncs when reconnected.'
+            },
+            {
+                'question_es': '¿La IA hace bien las recetas?',
+                'answer_es': '¡Claro! Puedes indicar los alimentos…',
+                'question_en': 'Are the AI recipes reliable?',
+                'answer_en': 'Absolutely! Tell it your ingredients & it returns full recipes.'
+            },
+        ]
+
+        return ctx

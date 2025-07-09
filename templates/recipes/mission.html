@@ -1,20 +1,6 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
-{# SEO: agrego meta description y JSON-LD para buscadores #}
-{% block head_extra %}
-  <meta name="description"
-        content="{% if LANGUAGE_CODE == 'es' %}Conoce mi misión en ZeroWaste Recipes: reducir desperdicio y CO₂ mediante IA y comunidad sostenible.{% else %}Learn my mission at ZeroWaste Recipes: cutting waste and CO₂ through an AI-powered sustainable cooking community.{% endif %}">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "{% trans "Misión" %}",
-    "description": "{% trans "Mi misión en ZeroWaste Recipes: transformar sobras en platos sostenibles usando IA." %}"
-  }
-  </script>
-{% endblock %}
-
 {% block title %}
   {% if LANGUAGE_CODE == 'es' %}
     Misión – ZeroWaste Recipes
@@ -23,118 +9,256 @@
   {% endif %}
 {% endblock %}
 
+{% block meta %}
+  {% if LANGUAGE_CODE == 'es' %}
+    <meta name="description" content="Nuestra misión: reducir el desperdicio doméstico, recortar CO₂ y transformar cada resto en una oportunidad deliciosa. Descubre objetivos y logros.">
+    <meta property="og:title" content="Misión – ZeroWaste Recipes">
+    <meta property="og:description" content="Conoce nuestra misión y objetivos: evitar desperdicio, medir CO₂, gamificar la sostenibilidad y crear comunidad.">
+  {% else %}
+    <meta name="description" content="Our mission: cut household food waste, reduce CO₂ and turn every scrap into a delicious opportunity. Discover our goals and achievements.">
+    <meta property="og:title" content="Mission – ZeroWaste Recipes">
+    <meta property="og:description" content="Learn about our mission and objectives: avoid waste, measure CO₂ reduction, gamify sustainability and build community.">
+  {% endif %}
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/og-mission.png' %}">
+{% endblock %}
+
 {% block content %}
-<!-- Hero Misión -->
-<section class="bg-green-50 rounded-xl overflow-hidden shadow-md">
-  <img src="{% static 'img/mission-hero.png' %}" 
-       alt="{% trans 'Nuestra misión' %}" 
-       class="w-full h-48 object-cover md:h-64">
-  <div class="p-6 text-center">
-    <h2 class="text-3xl font-serif text-primary mb-4">
-      {% if LANGUAGE_CODE == 'es' %}
-        Nuestra Misión
-      {% else %}
-        Our Mission
-      {% endif %}
-    </h2>
-    <p class="max-w-xl mx-auto text-gray-700">
-      {% if LANGUAGE_CODE == 'es' %}
-        En ZeroWaste Recipes creemos que cada ingrediente cuenta. Transformamos tus sobras en recetas deliciosas,
-        reducimos el desperdicio y la huella de CO₂, y empoderamos a nuestra comunidad para cocinar de forma
-        más sostenible.
-      {% else %}
-        At ZeroWaste Recipes we believe every ingredient matters. We turn your leftovers into delightful recipes,
-        cut waste and CO₂ emissions, and empower our community to cook more sustainably.
-      {% endif %}
-    </p>
+
+<!-- 1. HERO -->
+<div class="relative overflow-hidden bg-gradient-to-br from-green-50 via-white to-emerald-50">
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+    {% for _ in "123456789"|make_list %}
+      <span class="leaf" style="--i:{{ forloop.counter }};"></span>
+    {% endfor %}
   </div>
-</section>
-
-<!-- Cómo Funciona -->
-<section class="mt-10">
-  <h3 class="text-2xl font-serif text-primary mb-4 text-center">
-    {% if LANGUAGE_CODE == 'es' %}¿Cómo Funciona?{% else %}How It Works{% endif %}
-  </h3>
-  <div class="space-y-6 md:space-y-0 md:grid md:grid-cols-3 md:gap-6">
-    <div class="p-4 bg-white rounded-lg shadow-sm">
-      <h4 class="font-semibold mb-2">1. Añade tus sobras</h4>
-      <p class="text-gray-600">
-        {% if LANGUAGE_CODE == 'es' %}
-          Escribe los ingredientes que tienes en tu nevera.
-        {% else %}
-          List the ingredients you have in your fridge.
-        {% endif %}
-      </p>
-    </div>
-    <div class="p-4 bg-white rounded-lg shadow-sm">
-      <h4 class="font-semibold mb-2">2. IA genera receta</h4>
-      <p class="text-gray-600">
-        {% if LANGUAGE_CODE == 'es' %}
-          Nuestra IA crea una receta optimizada para ti.
-        {% else %}
-          Our AI crafts a recipe optimized just for you.
-        {% endif %}
-      </p>
-    </div>
-    <div class="p-4 bg-white rounded-lg shadow-sm">
-      <h4 class="font-semibold mb-2">3. Cocina y ahorra</h4>
-      <p class="text-gray-600">
-        {% if LANGUAGE_CODE == 'es' %}
-          Minimiza el desperdicio y disfruta de platos deliciosos.
-        {% else %}
-          Minimize waste and enjoy delicious meals.
-        {% endif %}
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- Beneficios -->
-<section class="mt-10 bg-white rounded-lg shadow-md p-6">
-  <h3 class="text-2xl font-serif text-primary mb-4 text-center">
-    {% if LANGUAGE_CODE == 'es' %}Beneficios{% else %}Benefits{% endif %}
-  </h3>
-  <ul class="list-disc list-inside space-y-2 text-gray-700">
-    <li>
-      {% if LANGUAGE_CODE == 'es' %}
-        Reduce tu huella de CO₂ cada vez que cocinas con sobras.
-      {% else %}
-        Reduce your CO₂ footprint each time you cook with leftovers.
-      {% endif %}
-    </li>
-    <li>
-      {% if LANGUAGE_CODE == 'es' %}
-        Descubre nuevas recetas creativas e internacionales.
-      {% else %}
-        Discover new and creative international recipes.
-      {% endif %}
-    </li>
-    <li>
-      {% if LANGUAGE_CODE == 'es' %}
-        Gana insignias y descuentos exclusivos en tiendas eco.
-      {% else %}
-        Earn badges and exclusive discounts at eco-friendly stores.
-      {% endif %}
-    </li>
-    <li>
-      {% if LANGUAGE_CODE == 'es' %}
-        Forma parte de una comunidad comprometida con el planeta.
-      {% else %}
-        Join a community committed to the planet.
-      {% endif %}
-    </li>
-  </ul>
-</section>
-
-<!-- Llamado a la acción -->
-<section class="mt-12 text-center">
-  <a href="{% url 'recipes:ingredients' %}"
-     class="inline-block bg-primary hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full transition">
+  <header class="relative mx-auto max-w-5xl px-6 py-28 text-center">
     {% if LANGUAGE_CODE == 'es' %}
-      ¡Empieza Ahora!
+      <h1 class="scroll-fade text-5xl md:text-6xl font-extrabold leading-tight text-emerald-700">
+        Aprovecha cada ingrediente, salva el planeta
+      </h1>
+      <p class="scroll-fade mt-6 text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
+        Cada plato que prepares con ZeroWaste Recipes evita que alimentos terminen en la basura y reduce tu huella de CO₂.
+      </p>
+      <a href="{% url 'recipes:ingredients' %}" class="scroll-fade mt-10 inline-block rounded-full bg-emerald-600 px-8 py-3 text-lg font-semibold text-white shadow-lg transition hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-300">
+        ¡Empieza ahora!
+      </a>
     {% else %}
-      Get Started!
+      <h1 class="scroll-fade text-5xl md:text-6xl font-extrabold leading-tight text-emerald-700">
+        Turn every ingredient into impact
+      </h1>
+      <p class="scroll-fade mt-6 text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
+        Each meal you create with ZeroWaste Recipes keeps food out of landfills and cuts your CO₂ footprint.
+      </p>
+      <a href="{% url 'recipes:ingredients' %}" class="scroll-fade mt-10 inline-block rounded-full bg-emerald-600 px-8 py-3 text-lg font-semibold text-white shadow-lg transition hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-300">
+        Get started now!
+      </a>
     {% endif %}
-  </a>
+  </header>
+</div>
+
+<!-- 2. PROBLEM & SOLUTION -->
+<section class="bg-white py-24" aria-label="{% trans 'Problem & Solution' %}">
+  <div class="mx-auto grid max-w-5xl gap-12 px-6 md:grid-cols-2 md:items-center">
+    <div class="scroll-up">
+      {% if LANGUAGE_CODE == 'es' %}
+        <h2 class="text-3xl font-bold text-emerald-700">El desperdicio de alimentos nos cuesta caro</h2>
+        <p class="mt-4 text-gray-700">Un tercio de los alimentos producidos se pierde cada año, generando 8 % de las emisiones globales de CO₂.</p>
+        <p class="mt-4 text-gray-700">Nuestra misión es revertir esta cifra transformando sobras en recetas deliciosas y medibles.</p>
+      {% else %}
+        <h2 class="text-3xl font-bold text-emerald-700">Food waste comes at a high cost</h2>
+        <p class="mt-4 text-gray-700">One-third of all food produced is lost annually, accounting for 8 % of global CO₂ emissions.</p>
+        <p class="mt-4 text-gray-700">Our mission is to reverse this by turning scraps into tasty, trackable recipes.</p>
+      {% endif %}
+    </div>
+    <figure class="scroll-up">
+      <img src="{% static 'img/problem-solution.webp' %}" alt="{% if LANGUAGE_CODE == 'es' %}Ilustración de desperdicio y solución ZeroWaste{% else %}Illustration of waste vs. ZeroWaste solution{% endif %}" width="560" height="340" loading="lazy" class="rounded-xl shadow-md">
+    </figure>
+  </div>
 </section>
+
+<!-- 3. MISSION & OBJECTIVES -->
+<section class="bg-emerald-50 py-24" aria-label="{% trans 'Our Mission & Objectives' %}">
+  <div class="mx-auto max-w-5xl px-6">
+    {% if LANGUAGE_CODE == 'es' %}
+      <h2 class="scroll-fade text-center text-3xl font-bold text-emerald-700">Nuestra misión</h2>
+      <p class="scroll-fade mt-8 text-lg text-gray-800 leading-relaxed">
+        {% blocktrans %}
+        En ZeroWaste Recipes creemos que cada ingrediente tiene un destino sabroso y que una cocina creativa puede convertirse en la herramienta más poderosa para reducir la huella de CO₂ en el hogar. Queremos inspirar, educar y empoderar a millones de personas para que aprovechen al máximo sus alimentos y, con ello, ayuden a frenar la crisis climática.
+        {% endblocktrans %}
+      </p>
+    {% else %}
+      <h2 class="scroll-fade text-center text-3xl font-bold text-emerald-700">Our Mission</h2>
+      <p class="scroll-fade mt-8 text-lg text-gray-800 leading-relaxed">
+        {% blocktrans %}
+        At ZeroWaste Recipes we believe every ingredient deserves a delicious destiny, and that a creative kitchen is the most powerful tool for reducing CO₂ at home. Our mission is to inspire, educate, and empower millions to make the most of their food and help curb the climate crisis.
+        {% endblocktrans %}
+      </p>
+    {% endif %}
+    <h3 class="scroll-fade mt-12 text-2xl font-semibold text-emerald-700 text-center">{% if LANGUAGE_CODE == 'es' %}Objetivos que guían cada línea de código{% else %}Objectives guiding every line of code{% endif %}</h3>
+    <ul class="scroll-up mt-8 grid gap-6 md:grid-cols-2">
+      {% for objective in objectives %}
+        <li class="flex items-start gap-3">
+          <span class="text-2xl">{{ objective.icon }}</span>
+          <p class="text-gray-700">{% if LANGUAGE_CODE == 'es' %}{{ objective.text_es }}{% else %}{{ objective.text_en }}{% endif %}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<!-- 4. HOW IT WORKS -->
+<section class="bg-gray-50 py-20" aria-label="{% trans 'How It Works' %}">
+  <div class="mx-auto max-w-5xl px-6">
+    <h2 class="scroll-fade text-center text-3xl font-bold text-emerald-700">{% if LANGUAGE_CODE == 'es' %}¿Cómo funciona?{% else %}How It Works{% endif %}</h2>
+    <ol class="mt-14 grid gap-10 md:grid-cols-3">
+      {% for step_item in how_it_works %}
+        <li class="scroll-up flex flex-col items-center text-center">
+          <span class="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-2xl font-bold text-emerald-700">{{ step_item.step }}</span>
+          <h3 class="mt-4 text-xl font-semibold">{% if LANGUAGE_CODE == 'es' %}{{ step_item.title_es }}{% else %}{{ step_item.title_en }}{% endif %}</h3>
+          <p class="mt-2 text-gray-600">{% if LANGUAGE_CODE == 'es' %}{{ step_item.desc_es }}{% else %}{{ step_item.desc_en }}{% endif %}</p>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<!-- 5. BENEFITS -->
+<section class="bg-white py-20" aria-label="{% trans 'Benefits' %}">
+  <div class="mx-auto grid max-w-6xl gap-12 px-6 md:grid-cols-2 lg:grid-cols-4">
+    {% for benefit in benefits %}
+      <article class="scroll-up flex flex-col items-center text-center">
+        <img src="{% static 'img/icons/'|add:benefit.icon %}" alt="" width="56" height="56" loading="lazy">
+        <h3 class="mt-4 text-xl font-semibold">
+          {% if LANGUAGE_CODE == 'es' %}{{ benefit.title_es }}{% else %}{{ benefit.title_en }}{% endif %}
+        </h3>
+        <p class="mt-2 text-gray-600">
+          {% if LANGUAGE_CODE == 'es' %}{{ benefit.desc_es }}{% else %}{{ benefit.desc_en }}{% endif %}
+        </p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- 6. IMPACT -->
+<section class="relative bg-emerald-600 py-24 text-white text-center" aria-label="{% trans 'Collective Impact' %}">
+  <div class="relative mx-auto max-w-4xl px-6">
+    {% if LANGUAGE_CODE == 'es' %}
+      <h2 class="scroll-fade text-4xl font-bold">Juntos ya hemos evitado</h2>
+      <p class="scroll-fade mt-4 text-6xl font-extrabold tracking-tight">100<span class="text-3xl">kg</span> CO₂</p>
+      <p class="scroll-fade mt-2 text-lg">¡Y esto acaba de empezar!</p>
+    {% else %}
+      <h2 class="scroll-fade text-4xl font-bold">So far we’ve prevented</h2>
+      <p class="scroll-fade mt-4 text-6xl font-extrabold tracking-tight">100<span class="text-3xl">kg</span> CO₂</p>
+      <p class="scroll-fade mt-2 text-lg">And this is just the beginning!</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- 7. TESTIMONIALS -->
+<section class="bg-white py-24" aria-label="{% trans 'Testimonials' %}">
+  <div class="mx-auto max-w-5xl px-6">
+    <h2 class="scroll-fade text-center text-3xl font-bold text-emerald-700">
+      {% if LANGUAGE_CODE == 'es' %}Historias que inspiran{% else %}Stories that inspire{% endif %}
+    </h2>
+    <div class="mt-12 grid gap-12 md:grid-cols-3">
+      {% for t in testimonials %}
+        <blockquote class="scroll-up flex flex-col items-center text-center">
+          <img src="{% static 'img/'|add:t.img %}" alt="{{ t.name }}" width="96" height="96" class="mb-4 rounded-full shadow-md" loading="lazy">
+          <p class="italic text-gray-700">
+            {% if LANGUAGE_CODE == 'es' %}{{ t.quote_es }}{% else %}{{ t.quote_en }}{% endif %}
+          </p>
+          <cite class="mt-2 font-semibold text-gray-900">{{ t.name }}</cite>
+        </blockquote>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 8. FAQ -->
+<section class="bg-gray-50 py-24" aria-label="{% trans 'FAQ' %}">
+  <div class="mx-auto max-w-3xl px-6">
+    <h2 class="scroll-fade text-center text-3xl font-bold text-emerald-700">
+      {% if LANGUAGE_CODE == 'es' %}Preguntas frecuentes{% else %}Frequently Asked Questions{% endif %}
+    </h2>
+    <div class="mt-10 space-y-4" id="faq">
+      {% for faq in faqs %}
+        <article class="scroll-up border-b border-gray-200">
+          <button type="button" class="w-full flex justify-between items-center py-4 text-left font-semibold text-gray-800" data-faq-toggle>
+            {% if LANGUAGE_CODE == 'es' %}{{ faq.question_es }}{% else %}{{ faq.question_en }}{% endif %}
+            <svg class="w-5 h-5 ml-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <p class="hidden pb-4 text-gray-700">
+            {% if LANGUAGE_CODE == 'es' %}{{ faq.answer_es }}{% else %}{{ faq.answer_en }}{% endif %}
+          </p>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 9. FINAL CTA -->
+<section class="bg-white py-24 text-center" aria-label="{% trans 'Join the Challenge' %}">
+  <div class="mx-auto max-w-xl px-6">
+    {% if LANGUAGE_CODE == 'es' %}
+      <h2 class="scroll-fade text-3xl font-bold text-emerald-700">Únete al reto Zero Waste</h2>
+      <p class="scroll-fade mt-4 text-gray-700">Empieza hoy mismo y consigue tu primera insignia en menos de 5 minutos.</p>
+      <a href="{% url 'register' %}" class="scroll-fade mt-8 inline-block rounded-full bg-emerald-600 px-10 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-300">
+        Crear cuenta gratuita
+      </a>
+    {% else %}
+      <h2 class="scroll-fade text-3xl font-bold text-emerald-700">Join the Zero Waste Challenge</h2>
+      <p class="scroll-fade mt-4 text-gray-700">Start today and earn your first badge in under 5 minutes.</p>
+      <a href="{% url 'register' %}" class="scroll-fade mt-8 inline-block rounded-full bg-emerald-600 px-10 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-300">
+        Create free account
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.leaf {
+  position: absolute; top: -10vh; left: calc(var(--i)*10%);
+  width: 24px; height: 24px;
+  background: url('{% static "img/leaf.svg" %}') contain no-repeat;
+  animation: fall calc(8s + var(--i)*.7s) linear infinite;
+  opacity: .8; pointer-events: none;
+}
+@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+.scroll-fade, .scroll-up {
+  opacity: 0; transform: translateY(25px); transition: .6s ease-out;
+}
+.visible { opacity: 1; transform: none; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  /* scroll reveal */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: .25 });
+  document.querySelectorAll('.scroll-fade, .scroll-up').forEach(el => io.observe(el));
+
+  /* FAQ accordion */
+  document.querySelectorAll('[data-faq-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = btn.nextElementSibling;
+      p.classList.toggle('hidden');
+      btn.querySelector('svg').classList.toggle('rotate-180');
+    });
+  });
+});
+</script>
 {% endblock %}
