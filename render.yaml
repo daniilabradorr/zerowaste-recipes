@@ -8,7 +8,7 @@ services:
     # Solo instalar dependencias; NADA de collectstatic aquí
     buildCommand: |
       pip install -r requirements.txt
-      python manage.py collectstatic --noinput --clear --verbosity 2
+      python manage.py collectstatic --noinput --verbosity 2
 
     # ---------- PRE-DEPLOY ----------
     # 1) Migraciones
