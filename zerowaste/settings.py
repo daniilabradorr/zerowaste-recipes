@@ -13,7 +13,7 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Para que whitenoise sirva los archivos estáticos de forma correcta y optimizada
 if not DEBUG:
@@ -21,7 +21,7 @@ if not DEBUG:
         "whitenoise.storage.CompressedManifestStaticFilesStorage"
     )
 
-ALLOWED_HOSTS = ["*","zerowaste-recipes.onrender.com"]
+ALLOWED_HOSTS = ["zerowaste-recipes.onrender.com"]
 
 
 # Application definition
