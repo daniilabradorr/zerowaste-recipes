@@ -1,20 +1,20 @@
 services:
   - type: web
-    name: zerowaste-recipes
+    name: zerowaste-recipes          # usa el mismo nombre que tu servicio en Render
     env: python
-    plan: free
+    plan: free                       # plan gratuito
 
     # ---------- BUILD ----------
-    # 1) Instala dependencias
-    # 2) Ejecuta collectstatic durante el build
+    # Solo instalar dependencias; NADA de collectstatic aquí
     buildCommand: |
       pip install -r requirements.txt
-      python manage.py collectstatic --noinput --clear --verbosity 2 || exit 1
 
     # ---------- PRE-DEPLOY ----------
-    # Sólo migraciones (los estáticos ya se recogieron arriba)
+    # 1) Migraciones
+    # 2) collectstatic (cuando ya existen todas las env-vars)
     preDeployCommand: |
       python manage.py migrate --noinput
+      python manage.py collectstatic --noinput --verbosity 2
 
     # ---------- START ----------
     startCommand: |
@@ -23,6 +23,6 @@ services:
         --bind 0.0.0.0:$PORT \
         --log-file -
 
-    # Opcional: health-check sencillo
+    # ---------- HEALTH-CHECK (opcional) ----------
     healthCheckPath: "/"
     healthCheckIntervalSeconds: 15
