@@ -5,43 +5,58 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  {# Meta description (puedes sobreescribir en plantillas hijas) #}
   {% block meta_description %}
     {% trans "ZeroWaste Recipes usa IA para convertir tus sobras en recetas deliciosas mientras reduces tu huella de CO₂. Descubre, comparte y sube de nivel con nuestras insignias gamificadas." as default_meta_desc %}
     <meta name="description" content="{{ default_meta_desc }}">
   {% endblock %}
+
   <meta name="author"   content="ZeroWaste Recipes">
   <meta name="keywords" content="zero waste, recetas, IA, cocinar, sobras, sostenibilidad, CO₂, gamificación, insignias">
 
-  <!-- Open Graph -->
+  {# Open Graph #}
   <meta property="og:type"        content="website">
   <meta property="og:site_name"   content="ZeroWaste Recipes">
   <meta property="og:title"       content="{% block og_title %}ZeroWaste Recipes{% endblock %}">
   <meta property="og:description" content="{% block og_description %}{{ default_meta_desc }}{% endblock %}">
   <meta property="og:url"         content="{{ request.build_absolute_uri }}">
 
-  <!-- Twitter Card -->
+  {# Twitter Card #}
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:site"        content="@ZeroWasteRecp">
   <meta name="twitter:title"       content="{% block twitter_title %}ZeroWaste Recipes{% endblock %}">
   <meta name="twitter:description" content="{% block twitter_description %}{{ default_meta_desc }}{% endblock %}">
-
-  <!-- PWA colours -->
-  <meta name="theme-color" content="#16a34a">
-
-  <!-- Favicon & Apple Touch -->
+  
+  {# Favicon & Apple Touch #}
   <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
   <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
 
+  {# Título de la página (se puede sobrescribir) #}
   <title>{% block title %}ZeroWaste Recipes{% endblock %}</title>
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  {# Google Fonts #}
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap"
+    rel="stylesheet"
+  >
 
-  <!-- Tailwind config – debe ir ANTES del CDN -->
+  {# PWA: manifest + Service Worker #}
+  <link rel="manifest" href="{% static 'manifest.json' %}">
   <script>
-    tailwind = {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register("{% static 'sw.js' %}")
+        .then(reg => console.log('SW registrado, scope:', reg.scope))
+        .catch(err => console.error('Error registrando SW:', err));
+    }
+  </script>
+
+
+  {# Tailwind CDN (MVP) #}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
       theme: {
         extend: {
           colors: {
@@ -56,25 +71,16 @@
       },
     };
   </script>
-  <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- PWA: manifest + Service Worker -->
-  <link rel="manifest" href="{% static 'manifest.json' %}">
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register("{% static 'sw.js' %}")
-        .then(reg => console.log('SW registrado, scope:', reg.scope))
-        .catch(err => console.error('Error registrando SW:', err));
-    }
-  </script>
-
-  <!-- HTMX -->
+  {# HTMX #}
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 
+  {# Para cargar CSS adicional #}
   {% block extra_css %}{% endblock %}
+
 </head>
 <body class="font-sans bg-gray-50 text-gray-800">
+  {# BLOQUE PARA JS EXTRA DE PLANTILLAS HIJAS #}
   {% block extra_js %}{% endblock %}
 
   <!-- Header -->
