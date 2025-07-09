@@ -1,14 +1,27 @@
 services:
   - type: web
-    name: zerowaste-recipes
+    name: zerowaste-recipes          # usa el mismo nombre que tu servicio en Render
     env: python
-    plan: free
-    staticPublishPath: staticfiles
+    plan: free                       # plan gratuito
 
+    # ---------- BUILD ----------
+    # Solo instalar dependencias; NADA de collectstatic aquí
     buildCommand: |
       pip install -r requirements.txt
       python manage.py collectstatic --noinput --clear --verbosity 2
+
+    # ---------- PRE-DEPLOY ----------
+    # 1) Migraciones
+    preDeployCommand: |
       python manage.py migrate --noinput
 
+    # ---------- START ----------
     startCommand: |
-      gunicorn zerowaste.wsgi --workers 3 --bind 0.0.0.0:$PORT --log-file -
+      gunicorn zerowaste.wsgi \
+        --workers 3 \
+        --bind 0.0.0.0:$PORT \
+        --log-file -
+
+    # ---------- HEALTH-CHECK (opcional) ----------
+    healthCheckPath: "/"
+    healthCheckIntervalSeconds: 15
