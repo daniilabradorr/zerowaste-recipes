@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'widget_tweaks',     # Para modificar widgets de formularios
     "django_htmx",       # Para manejar peticiones HTMX
     "ckeditor",          # para el editor de texto enriquecido
-]
+] 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
